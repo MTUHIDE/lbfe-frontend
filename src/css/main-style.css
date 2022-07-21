@@ -1,0 +1,57 @@
+/*
+    -- Main style sheet here for all components/views within this project --
+    - removes the need for duplicate styles
+    - easy look and feel changes
+*/
+
+/* -- Color Schema -- */
+:root {
+
+    /*
+    ######################
+    --     Desktop      --
+    ######################
+    */
+
+    /* -- Page Color Schema -- */
+    --bg-color: white;
+    --bg-accent-color: #6a6a6a;
+    --secondary-accent-color: #2e2e2e;
+
+    /* -- Default Schema -- */
+    --nb-color: #d31534;
+    --nb-color-hover: #af102a;
+    --nb-color-active: #7e2c2c;
+
+    /* -- Admin Schema -- */
+    --nb-a-color: #0870b5;
+    --nb-a-color-hover: #065285;
+    --nb-a-color-active: #043250;
+
+    /* -- Text -- */
+    --nb-text-color: rgba(255, 255, 255, 0.8);
+    --nb-text-color-hover: #ffffff;
+    --nb-text-color-active: #2e2e2e;
+
+    /* -- Reports Filter -- */
+    --fb-btn-radius: 10px;
+    --fb-btn-spacing: 0.1em;
+
+}
+
+/*
+######################
+--     Buttons      --
+######################
+*/
+
+/* -- Universal fade -- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
