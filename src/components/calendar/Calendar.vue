@@ -10,6 +10,7 @@ import { Modal } from 'bootstrap';
 import CalendarPopup from './CalendarPopup.vue';
 import DeleteModal from './DeleteModal.vue';
 import SuccessAlert from '../busforms/SuccessAlert.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -103,9 +104,41 @@ export default {
                 eventChange:
                 eventRemove:
                 */
-                
-                events: '/api/appointments',
-                
+                // eventSources:[
+                //   {
+                //     url: 'http:127.0.0.1:8000/api/appointments', // use the `url` property
+                //     color: 'yellow',    // an option!
+                //     textColor: 'black'  // an option!
+                //   }
+                // ],
+                events: function(info, successCallback) {
+                  console.log("HELLO");
+                  console.log(info);
+                  axios.get('http://127.0.0.1:8000/api/appointments', {
+                    params: {
+                      start: info.startStr,
+                      end: info.endStr
+                    }
+                  }).then(response => {
+                    console.log("It worked, events fetched!");
+                    console.log(response);
+                    successCallback(response.data);
+                    Array.prototype.slice.call( // convert to array
+                      response.data[0]
+                    ).map(function(eventEl) {
+                      return {
+                        title: eventEl.getAttribute('title'),
+                        start: eventEl.getAttribute('start')
+                      }
+                    })
+                  })
+                  .catch((error) => {
+                    console.log(error.response.data);
+                  })
+                }
+                // events: {
+                //   url: 'http://127.0.0.1:8000/api/appointments'
+                // }
             },
             popupTriggers,
             TogglePopup,
@@ -143,10 +176,11 @@ export default {
           this.$refs.editModal.setViewingMode();
         },
         handleEventDrop(e) {
-          this.$axios.put('/api/appointment/update-date/' + e.event.id, {
+          this.$axios.put('http://127.0.0.1:8000/api/appointment/update-date/' + e.event.id, {
             start: e.event.start,
             end: e.event.end,
           }).then(response => {
+            console.log(response);
             this.showAlert();
           })
           .catch((error) => {
@@ -154,10 +188,11 @@ export default {
           })
         },
         eventResize(e) {
-          this.$axios.put('/api/appointment/update-date/' + e.event.id, {
+          this.$axios.put('http://127.0.0.1:8000/api/appointment/update-date/' + e.event.id, {
             start: e.event.start,
             end: e.event.end,
           }).then(response => {
+            console.log(response);
             this.showAlert();
           })
           .catch((error) => {
@@ -216,7 +251,7 @@ export default {
         },
         submitForm() {
           // console.log(this);
-          this.$axios.post('/api/appointment/store', {
+          this.$axios.post('http://127.0.0.1:8000/api/appointment/store', {
             title: this.addTitle,
             clientId: this.selectedClient.addClientId,
             driverId: this.selectedDriver.addDriverId,
@@ -228,6 +263,7 @@ export default {
             // clientId: this.,
             // driverId: this.,
           }).then(response => {
+            console.log(response);
             this.hideModal();
             this.showAlert();
             this.refetchEvents();
@@ -239,7 +275,7 @@ export default {
         },
 
         getDrivers(){
-          this.$axios.get('/api/drivers')
+          this.$axios.get('http://127.0.0.1:8000/api/drivers')
             .then((driversdata) => {
                 this.addDrivers = driversdata.data;
             }).catch((error) => {
@@ -248,7 +284,7 @@ export default {
         },
 
         getClients(){
-          this.$axios.get('/api/clients')
+          this.$axios.get('http://127.0.0.1:8000/api/clients')
             .then((clientdata) => {
                 this.addClients = clientdata.data;
                 console.log(this.addClients);

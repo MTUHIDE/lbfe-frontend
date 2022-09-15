@@ -134,7 +134,7 @@
     },
     methods: {
       submitForm() {
-        this.$axios.post('/api/appointment/store', {
+        this.$axios.post('http:127.0.0.1:8000/api/appointment/store', {
           title: this.title,
           clientName: this.clientName,
           driverName: this.driverName,
@@ -151,7 +151,7 @@
       },
 
       getDrivers(){
-        this.$axios.get('/api/drivers')
+        this.$axios.get('http://127.0.0.1:8000/api/drivers')
           .then((driversdata) => {
               console.log(driversdata);
               this.drivers = driversdata.data;
@@ -161,7 +161,7 @@
       },
 
       getClients(){
-        this.$axios.get('/api/clients')
+        this.$axios.get('http://127.0.0.1:8000/api/clients')
           .then((clientdata) => {
               console.log(clientdata);
               this.clients = clientdata.data;

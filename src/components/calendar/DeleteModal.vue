@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     deleteForm() {
-      this.$axios.delete('/api/appointment/' + this.appointmentId, {
+      this.$axios.delete('http:127.0.0.1:8000/api/appointment/' + this.appointmentId, {
 
       }).then(response => {
         this.$emit('delete-success-alert'); // emit success to parent

@@ -56,7 +56,7 @@ export default {
       this.editing = false;
     },
     getPreviousValues() { // this function gets the values for a particular appointment
-        this.$axios.get('/api/appointment/' + this.appointmentId)
+        this.$axios.get('http:127.0.0.1:8000/api/appointment/' + this.appointmentId)
         .then((appointmentData) => {
           
             this.oldTitle = appointmentData.data['0'].appointment_title;
@@ -74,7 +74,7 @@ export default {
         })
     },
     getDrivers() {
-      this.$axios.get('/api/drivers')
+      this.$axios.get('http://127.0.0.1:8000/api/drivers')
         .then((driversdata) => {
             this.addDrivers = driversdata.data;
         }).catch((error) => {
@@ -82,7 +82,7 @@ export default {
         })
     },
     getClients() {
-      this.$axios.get('/api/clients')
+      this.$axios.get('http://127.0.0.1:8000/api/clients')
         .then((clientdata) => {
             this.addClients = clientdata.data;
         }).catch((error) => {
@@ -90,7 +90,7 @@ export default {
         })
       },
       editForm() {
-        this.$axios.put('/api/appointment/' + this.appointmentId, {
+        this.$axios.put('http://127.0.0.1:8000/api/appointment/' + this.appointmentId, {
             driverId: this.oldDriverId,
             clientId: this.oldElderId,
             title: this.oldTitle,

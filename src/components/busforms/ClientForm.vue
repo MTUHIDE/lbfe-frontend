@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     getClients() {
-      this.$axios.get('/api/clients')
+      this.$axios.get('http://127.0.0.1:8000/api/clients')
         .then((clientsdata) => {
             console.log(clientsdata);
             this.clients = clientsdata.data;

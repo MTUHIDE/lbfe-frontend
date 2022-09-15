@@ -76,7 +76,7 @@ export default {
                 eventChange:
                 eventRemove:
                 */
-                events: '/api/appointments'
+                events: 'http:127.0.0.1:8000/api/appointments'
             },
             popupTriggers,
             TogglePopup,
