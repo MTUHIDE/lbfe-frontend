@@ -35,5 +35,5 @@ jobs:
         builder: ${{ steps.buildx.outputs.name }}
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:latest
-        cache-from: type=registry,ref=${{ secrents.DOCKER_HUB_USERNAME }}/simplewhale:buildcache
+        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:buildcache
         cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:buildcahce,mode=max
