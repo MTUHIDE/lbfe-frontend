@@ -122,7 +122,7 @@ export default {
       console.log(this.collapseId);
       // const getUrl = '/api/client/' + this.collapseId;
       // console.log(getUrl);
-      this.$axios.get('http://127.0.0.1:8000/api/client/' + this.collapseId)
+      this.$axios.get(process.env.VUE_APP_API_URL +'/api/client/' + this.collapseId)
         .then((clientsdata) => {
           console.log(clientsdata.data['0']);  //THERE SEEMS TO BE SOMETHING WRONG HERE, NOTHING IS LOGGED TO THE CONSOLE. 
           this.oldName = clientsdata.data['0'].client_name;

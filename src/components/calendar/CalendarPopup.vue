@@ -74,7 +74,7 @@ export default {
         })
     },
     getDrivers() {
-      this.$axios.get('http://127.0.0.1:8000/api/drivers')
+      this.$axios.get(process.env.VUE_APP_API_URL + '/api/drivers')
         .then((driversdata) => {
             this.addDrivers = driversdata.data;
         }).catch((error) => {
@@ -82,7 +82,7 @@ export default {
         })
     },
     getClients() {
-      this.$axios.get('http://127.0.0.1:8000/api/clients')
+      this.$axios.get(process.env.VUE_APP_API_URL + '/api/clients')
         .then((clientdata) => {
             this.addClients = clientdata.data;
         }).catch((error) => {
@@ -90,7 +90,7 @@ export default {
         })
       },
       editForm() {
-        this.$axios.put('http://127.0.0.1:8000/api/appointment/' + this.appointmentId, {
+        this.$axios.put(process.env.VUE_APP_API_URL + '/api/appointment/' + this.appointmentId, {
             driverId: this.oldDriverId,
             clientId: this.oldElderId,
             title: this.oldTitle,

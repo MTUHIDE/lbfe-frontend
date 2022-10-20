@@ -112,9 +112,7 @@ export default {
                 //   }
                 // ],
                 events: function(info, successCallback) {
-                  console.log("HELLO");
-                  console.log(info);
-                  axios.get('http://127.0.0.1:8000/api/appointments', {
+                  axios.get(process.env.VUE_APP_API_URL + '/api/appointments', {
                     params: {
                       start: info.startStr,
                       end: info.endStr
@@ -176,7 +174,7 @@ export default {
           this.$refs.editModal.setViewingMode();
         },
         handleEventDrop(e) {
-          this.$axios.put('http://127.0.0.1:8000/api/appointment/update-date/' + e.event.id, {
+          this.$axios.put(process.env.VUE_APP_API_URL + '/api/appointment/update-date/' + e.event.id, {
             start: e.event.start,
             end: e.event.end,
           }).then(response => {
@@ -188,7 +186,7 @@ export default {
           })
         },
         eventResize(e) {
-          this.$axios.put('http://127.0.0.1:8000/api/appointment/update-date/' + e.event.id, {
+          this.$axios.put(process.env.VUE_APP_API_URL + '/api/appointment/update-date/' + e.event.id, {
             start: e.event.start,
             end: e.event.end,
           }).then(response => {
@@ -251,7 +249,7 @@ export default {
         },
         submitForm() {
           // console.log(this);
-          this.$axios.post('http://127.0.0.1:8000/api/appointment/store', {
+          this.$axios.post(process.env.VUE_APP_API_URL + '/api/appointment/store', {
             title: this.addTitle,
             clientId: this.selectedClient.addClientId,
             driverId: this.selectedDriver.addDriverId,
@@ -275,7 +273,7 @@ export default {
         },
 
         getDrivers(){
-          this.$axios.get('http://127.0.0.1:8000/api/drivers')
+          this.$axios.get(process.env.VUE_APP_API_URL + '/api/drivers')
             .then((driversdata) => {
                 this.addDrivers = driversdata.data;
             }).catch((error) => {
@@ -284,7 +282,7 @@ export default {
         },
 
         getClients(){
-          this.$axios.get('http://127.0.0.1:8000/api/clients')
+          this.$axios.get(process.env.VUE_APP_API_URL + '/api/clients')
             .then((clientdata) => {
                 this.addClients = clientdata.data;
                 console.log(this.addClients);
