@@ -18,7 +18,7 @@ export default {
       <!-- <b-table class="drivetbl" stacked selectable @select="selected" hover sticky-header :items="items">
       </b-table> -->
     </table>
-      <router-link tag="button" to="/driver"  class="btn btn-secondary btn-lg" >Back</router-link>
+      <router-link to="/driver"  class="btn btn-secondary btn-lg" >Back</router-link>
     </div>
   </div>
 </template>

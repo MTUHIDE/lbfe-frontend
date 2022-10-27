@@ -1,5 +1,5 @@
 <script>
-  import Calendar from '../../components/calendar/Calendar.vue';
+  import Calendar from '../../components/driverCalendar/CalendarDriver.vue';
 
   export default {
   props: {},
@@ -8,7 +8,6 @@
     return { }
   }
 }
-
 </script>
 
 <template>

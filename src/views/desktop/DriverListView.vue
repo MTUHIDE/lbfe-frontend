@@ -1,7 +1,6 @@
 <script>
-// @ is an alias to /src - TODO, fix that..
 // TODO - build the form, remove this comment when it is done
-import DriverForm from '../../components/busforms/DriverForm.vue';
+import DriverForm from "../../components/busforms/DriverForm.vue";
 export default {
   components: { DriverForm },
 };
@@ -14,5 +13,4 @@ export default {
 </template>
 
 <style scoped>
-    
 </style>

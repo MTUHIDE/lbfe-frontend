@@ -1,16 +1,20 @@
-import { createStore } from 'vuex';
+// TODO: We will be using Pinia over Vuex. Vue has officially switched support to Pinia
 
-const store = createStore({
-  state() {
-    return {
-      // accessToken:"" // place to store our authToken ??
-    };
-  },
-  mutations :{
-    // setAccessToken(token) {
-    //   // accessToken = token;
-    // }
-  }
-});
+// /* eslint-disable */ 
+// import Vuex from 'vuex';
 
-export default store;
+// export function createStore() {
+//   return new Vuex.Store({
+//     state: {
+//       app: null
+//     },
+//     mutations: {
+//       app (state, app) {
+//         state.app = app
+//       }
+//     },
+//     modules: {
+      
+//     }
+//   })
+// }

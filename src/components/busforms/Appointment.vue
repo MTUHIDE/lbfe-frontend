@@ -134,7 +134,7 @@
     },
     methods: {
       submitForm() {
-        this.$axios.post(process.env.VUE_APP_API_URL + '/api/appointment/store', {
+        this.$axios.post('/api/appointment/store', {
           title: this.title,
           clientName: this.clientName,
           driverName: this.driverName,
@@ -151,7 +151,7 @@
       },
 
       getDrivers(){
-        this.$axios.get(process.env.VUE_APP_API_URL + '/api/drivers')
+        this.$axios.get('/api/drivers')
           .then((driversdata) => {
               console.log(driversdata);
               this.drivers = driversdata.data;
@@ -161,7 +161,7 @@
       },
 
       getClients(){
-        this.$axios.get(process.env.VUE_APP_API_URL + '/api/clients')
+        this.$axios.get('/api/clients')
           .then((clientdata) => {
               console.log(clientdata);
               this.clients = clientdata.data;

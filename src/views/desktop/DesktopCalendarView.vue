@@ -1,25 +1,23 @@
 <script>
-  import Calendar from '../../components/driverCalendar/Calendar.vue';
+import Calendar from "../../components/calendar/CalendarAdmin.vue";
 
-  export default {
+export default {
   props: {},
   components: { Calendar },
   setup() {
-    return { }
-  }
-}
+    return {};
+  },
+};
 </script>
 
 <template>
   <div class="text-center">
-    <Calendar/>
+    <Calendar />
   </div>
 </template>
 
 <style scoped>
-
 ::-webkit-scrollbar {
   width: 0px;
 }
-
 </style>

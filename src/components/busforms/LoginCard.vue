@@ -1,9 +1,8 @@
 <script>
-// @ is an alias to /src
-import ButtonBlock from './ButtonBlock.vue';
+import ButtonBlock from "./ButtonBlockWatermelon.vue";
 
 export default {
-  name: 'LoginCard',
+  name: "LoginCard",
   components: {
     ButtonBlock,
   },
@@ -17,27 +16,48 @@ export default {
         <div id="disabledWrapper">
           <form id="loginForm" action="" method="post">
             <!-- <b-form-group has-error> -->
-              <!-- <img alt="LBFE logo" src="/../../../../images/LBFE_LOGOH_red_upmichigan.png" /> -->
-              <img alt="LBFE logo" src="../../images/LBFE_LOGOH_red_upmichigan.png" />
-              <br />
-              <h2 class="text-center">Welcome to Little Brothers!</h2>
-              <h4 class="text-center">Login to get started</h4>
-              <br />
+            <!-- <img alt="LBFE logo" src="/../../../../images/LBFE_LOGOH_red_upmichigan.png" /> -->
+            <img
+              alt="LBFE logo"
+              src="../../images/LBFE_LOGOH_red_upmichigan.png"
+            />
+            <br />
+            <h2 class="text-center">Welcome to Little Brothers!</h2>
+            <h4 class="text-center">Login to get started</h4>
+            <br />
 
-              <label for="username" class="form-label"><strong>Username</strong></label>
-              <input type="text" class="form-control" id="username" placeholder="Username">
-              <div class="invalid-feedback"></div>
+            <label for="username" class="form-label"
+              ><strong>Username</strong></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              placeholder="Username"
+            />
+            <div class="invalid-feedback"></div>
 
             <div class="form-group has-error">
-              <label for="password" class="form-label"><strong>Password</strong></label>
-              <input type="password" class="form-control" id="password" placeholder="Password">
+              <label for="password" class="form-label"
+                ><strong>Password</strong></label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Password"
+              />
               <div class="invalid-feedback"></div>
             </div>
-              <ButtonBlock class="mt-3 mb-3" buttonBlockText="Log in" />
+            <ButtonBlock class="mt-3 mb-3" buttonBlockText="Log in" />
             <!-- <button to="/driver" class="btn btn-primary my-2"></button>
             <button to="/calendar" class="btn btn-primary mt-2"></button> -->
-            <router-link class="btn btn-primary mt-2" to="/driver/calendar">Go to Driver site</router-link>
-            <router-link class="btn btn-primary mt-2" to="/calendar">Go to Admin site</router-link>
+            <router-link class="btn btn-primary mt-2" to="/driver/calendar"
+              >Go to Driver site</router-link
+            >
+            <router-link class="btn btn-primary mt-2" to="/calendar"
+              >Go to Admin site</router-link
+            >
           </form>
         </div>
       </div>

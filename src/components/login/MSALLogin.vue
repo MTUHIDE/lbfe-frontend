@@ -1,7 +1,11 @@
 <script lang="js">
-import msalConfig from '../../js/msal/msalConfig';
+/* eslint-disable */
+import msalConfig from '../../msal/msalConfig';
 import * as Msal from 'msal'; 
-import store from '../../store/index';
+
+// TODO: Once Pinia is installed, we will build a proper store that can be accessed without the nested imports like we have it now
+// import store from '../../store/index';
+
 export default {
     name: 'MSALLogin',
     data() {
@@ -31,7 +35,8 @@ export default {
 
         // Store token somewhere..
         function storeToken(token) {
-            store.setAccessToken = token;
+            // store.setAccessToken = token;
+            console.log("Currently store is broken, cannot set token: " + token)
         }
 
         // Figure out what ta heck to do with da token
@@ -53,13 +58,14 @@ export default {
 
         //--------------------------------------------------------------
         // Driver code => Run our authorization
+        
         async function runMSALGetToken() {
             storeToken(request); // keep the response for other pages to access....
-            // let loginResponse = await client.loginPopup(request);
+            let loginResponse = await client.loginPopup(request);
             let response = await getUserMSData();
 
             evalUserPermission(response);
-        }
+        };
         return {
             runMSALGetToken
         }
@@ -69,29 +75,31 @@ export default {
 </script>
   
 <template>
-    <div class="d-grid gap-2">
-        <button
-            type="button"
-            id="SignIn"
-            class="btn-watermelon btn btn-primary"
-            v-on:click="runMSALGetToken"
-            buttonBlockText="Sign In"
-        >Log In</button>
-    </div>
+  <div class="d-grid gap-2">
+    <button
+      type="button"
+      id="SignIn"
+      class="btn-watermelon btn btn-primary"
+      v-on:click="runMSALGetToken"
+      buttonBlockText="Sign In"
+    >
+      Log In
+    </button>
+  </div>
 </template>
 
 
 <style lang="scss" scoped>
 .btn-watermelon {
   color: #fff;
-  background-color: #FF3B3F;
-  border-color: #FF3B3F;
+  background-color: #ff3b3f;
+  border-color: #ff3b3f;
 }
 
 .btn-watermelon:hover {
-    color: #fff;
-    background-color: #c93033;
-    border-color: #c93033;
+  color: #fff;
+  background-color: #c93033;
+  border-color: #c93033;
 }
 
 .btn-watermelon:focus {

@@ -1,12 +1,9 @@
 <script>
-// @ is an alias to /src
-import ButtonBlock from "../busforms/ButtonBlock.vue";
 import MSALLogin from "./MSALLogin.vue";
 
 export default {
   name: "LoginCard",
   components: {
-    ButtonBlock,
     MSALLogin,
   },
 };

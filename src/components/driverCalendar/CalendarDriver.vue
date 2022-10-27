@@ -1,7 +1,7 @@
 <script>
 import '@fullcalendar/core/vdom' // solves problem with Vite
 import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
+// import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
@@ -76,7 +76,7 @@ export default {
                 eventChange:
                 eventRemove:
                 */
-                events: 'http:127.0.0.1:8000/api/appointments'
+                events: '/api/appointments'
             },
             popupTriggers,
             TogglePopup,

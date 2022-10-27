@@ -1,7 +1,6 @@
 <script>
-// @ is an alias to /src - TODO, fix that..
 // TODO - build the form, remove this comment when it is done
-import ClientForm from '../../components/busforms/ClientForm.vue';
+import ClientForm from "../../components/busforms/ClientForm.vue";
 export default {
   components: { ClientForm },
 };
@@ -9,10 +8,9 @@ export default {
 
 <template>
   <div class="clients">
-    <ClientForm /> 
+    <ClientForm />
   </div>
 </template>
 
 <style scoped>
-    
 </style>

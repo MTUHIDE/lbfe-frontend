@@ -52,7 +52,7 @@ export default {
       </template>
     <!-- </b-table> -->
   </table>
-    <router-link tag="button" to="/driver" class="btn btn-primary">Back</router-link>
+    <router-link to="/driver" class="btn btn-primary">Back</router-link>
     <!-- <b-button href="#" to="/driver" variant="primary">Back</b-button> -->
   </div>
 </template>

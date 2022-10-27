@@ -6,21 +6,20 @@
 <template>
   <div class="client">
     <div class="container-fluid">
+      <h1>Elders</h1>
 
-        <h1>Elders</h1>
-
-        <div class="accordion" id="anAccordion">
-          <AccordionList 
-            v-show="1" 
-            v-for="client in clients"
-            :key="client.id"
-            :collapseId="client.id"
-            :name="client.client_name"
-            :address="client.client_address" 
-            :phone_number="client.client_phone_number"
-            :mobility="client.mobility"
-            :notes="client.client_notes"
-            :numofcancels="client.number_of_cancels" 
+      <div class="accordion" id="anAccordion">
+        <AccordionList
+          v-show="1"
+          v-for="client in clients"
+          :key="client.id"
+          :collapseId="client.id"
+          :name="client.client_name"
+          :address="client.client_address"
+          :phone_number="client.client_phone_number"
+          :mobility="client.mobility"
+          :notes="client.client_notes"
+          :numofcancels="client.number_of_cancels"
         ></AccordionList>
       </div>
     </div>
@@ -28,11 +27,11 @@
 </template>
 
 <script>
-import AccordionList from './AccordionList.vue';
+import AccordionList from "./AccordionList.vue";
 
 export default {
   components: {
-    AccordionList
+    AccordionList,
   },
   props: {
     editMode: { type: Boolean, required: false, default: false },
@@ -54,23 +53,23 @@ export default {
     };
   },
   mounted() {
-    this.getClients();
+    this.getClients(); // TODO: Update to 'watch'
   },
   methods: {
     getClients() {
-      this.$axios.get(process.env.VUE_APP_API_URL + '/api/clients')
+      this.$axios
+        .get("/api/clients")
         .then((clientsdata) => {
-            console.log(clientsdata);
-            this.clients = clientsdata.data;
-        }).catch((error) => {
-            console.log(error)
+          console.log(clientsdata);
+          this.clients = clientsdata.data;
         })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
-
 };
 </script>
 
 <style lang="scss" scoped>
-
 </style>

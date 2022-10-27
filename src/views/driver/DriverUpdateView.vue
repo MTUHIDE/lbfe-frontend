@@ -48,7 +48,7 @@ export default {
       </button>
     </div>
     <div class="save-btn-area">
-      <router-link tag="button" class="btn btn-secondary" to="/driver">Back</router-link>
+      <router-link class="btn btn-secondary" to="/driver">Back</router-link>
       <!-- <b-button variant="secondary" to="/driver">Back</b-button> -->
       <button type="button" class="btn btn-primary">Save</button>
       <!-- <b-button variant="primary">Save</b-button> -->

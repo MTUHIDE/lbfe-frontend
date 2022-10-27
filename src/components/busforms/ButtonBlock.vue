@@ -1,40 +1,40 @@
-<template>
-<div>
-  <div class="d-grid gap-2">
-    <button class="btn-watermelon btn btn-primary" value="login">{{buttonBlockText}}</button>
-</div>
-
-</div>
-</template>
-
 <script>
+/* eslint-disable */
 export default {
   name: "ButtonBlock",
   props: {
-    buttonBlockText: String
+    buttonText: String,
+    to: String
   },
 };
 </script>
 
+<template>
+<div>
+  <b-button class="btn-default" block variant="primary" value="to">{{buttonText}}</b-button>
+</div>
+</template>
+
 <style lang="scss" scoped>
-.btn-watermelon {
-  color: #fff;
-  background-color: #FF3B3F;
-  border-color: #FF3B3F;
+.btn-default {
+  color: var(--nb-text-color);
+  background-color: var(--nb-color);
+  border-color: var(--nb-color-hover);
 }
 
-.btn-watermelon:hover {
-    color: #fff;
-    background-color: #c93033;
-    border-color: #c93033;
+.btn-default:hover {
+  color: var(--nb-text-color-hover);
+  background-color: var(--nb-color-hover);
+  border-color: var(--nb-color-active);
 }
 
-.btn-watermelon:focus {
+.btn-default:focus {
   box-shadow: 0 0 0 0.2rem rgb(255 65 83 / 50%) !important;
 }
 
-.btn-watermelon:active {
-  background-color: #c93033 !important;
-  border-color: #c93033 !important;
+.btn-default:active {
+  color: var(--nb-text-color-active);
+  background-color: var(--nb-color-active);
+  border-color: var(--nb-color-active);
 }
 </style>

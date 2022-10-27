@@ -1,20 +1,19 @@
 <script>
-import Navbar from "./components/navbar/Navbar.vue";
+import NavBar from "./components/navbar/NavBar";
 require("./css/main-style.css");
-import store from "./store";
+
 
 export default {
   name: "App",
-  store,
-  components: { Navbar },
+  components: { NavBar },
 };
 </script>
 
 <template>
   <div id="app">
-    <Navbar v-if="!$route.meta.hideNavbar"/>
+    <NavBar v-if="!$route.meta.hideNavbar"/>
     <div class="main-content">
-      <router-view />
+      <router-view></router-view>
     </div>
     <footer>Brought to you by HIDE (MTU)</footer>
   </div>
@@ -27,7 +26,7 @@ body {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
