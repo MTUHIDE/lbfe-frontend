@@ -1,7 +1,5 @@
 <script>
-import NavBar from "./components/navbar/NavBar";
 require("./css/main-style.css");
-
 
 export default {
   name: "App",
