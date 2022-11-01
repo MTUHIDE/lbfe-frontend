@@ -8,6 +8,8 @@ import router from "./router";
 import Emitter from 'tiny-emitter';
 // import "mutationobserver-shim";
 import '@fortawesome/fontawesome-free/js/all';
+
+// I don't know what to do about this here....
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import axios2 from 'axios'
