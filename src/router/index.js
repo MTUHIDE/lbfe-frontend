@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: () => import('../views/Login.vue'),
+    component: () => import('../views/LoginForm.vue'),
     meta: { hideNavbar: true },
   },
   {
@@ -28,7 +28,7 @@ const routes = [
   {
     path: '/elders',
     name: 'Elders',
-    component: () => import('../views/desktop/Clients.vue'),
+    component: () => import('../views/desktop/ClientsForm.vue'),
     meta: { admin: true },
   },
   {
