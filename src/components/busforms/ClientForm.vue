@@ -4,72 +4,118 @@
 // TODO Make the modal verify it should be closed to avoid losing unsaved changes
 
 <template>
-  <div class="client">
-    <div class="container-fluid">
-      <h1>Elders</h1>
-
-      <div class="accordion" id="anAccordion">
-        <AccordionList
-          v-show="1"
-          v-for="client in clients"
-          :key="client.id"
-          :collapseId="client.id"
-          :name="client.client_name"
-          :address="client.client_address"
-          :phone_number="client.client_phone_number"
-          :mobility="client.mobility"
-          :notes="client.client_notes"
-          :numofcancels="client.number_of_cancels"
-        ></AccordionList>
-      </div>
-    </div>
-  </div>
+  <table-lite
+    :is-slot-mode="true"
+    :is-loading="table.isLoading"
+    :columns="table.columns"
+    :rows="table.rows"
+    :total="table.totalRecordCount"
+    :sortable="table.sortable"
+    @do-search="doSearch"
+    @is-finished="table.isLoading = false"
+  >
+    <template v-slot:name="data">
+      <Test>
+        {{ data.value.name }}
+      </Test>
+    </template>
+  </table-lite>
 </template>
 
 <script>
-import AccordionList from "./AccordionList.vue";
-
-export default {
-  components: {
-    AccordionList,
-  },
-  props: {
-    editMode: { type: Boolean, required: false, default: false },
-    activeBack: { type: String, required: false, default: "flex" },
-    redirect: { type: String, required: true },
-  },
-  data() {
+import { defineComponent, reactive } from "vue";
+import TableLite from "./elderTable/TableLite.vue";
+import Test from "./elderTable/Test.vue";
+// Fake Data for 'asc' sortable
+const sampleData1 = (offst, limit) => {
+  offst = offst + 1;
+  let data = [];
+  for (let i = offst; i <= limit; i++) {
+    data.push({
+      id: i,
+      name: "TEST" + i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
+// Fake Data for 'desc' sortable
+const sampleData2 = (offst, limit) => {
+  let data = [];
+  for (let i = limit; i > offst; i--) {
+    data.push({
+      id: i,
+      name: "TEST" + i,
+      email: "test" + i + "@example.com",
+    });
+  }
+  return data;
+};
+export default defineComponent({
+  name: "App",
+  components: { TableLite, Test },
+  setup() {
+    // Table config
+    const table = reactive({
+      isLoading: false,
+      columns: [
+        {
+          label: "ID",
+          field: "id",
+          width: "3%",
+          sortable: true,
+          isKey: true,
+        },
+        {
+          label: "Name",
+          field: "name",
+          width: "10%",
+          sortable: true,
+        },
+        {
+          label: "Email",
+          field: "email",
+          width: "15%",
+          sortable: true,
+        },
+      ],
+      rows: [],
+      totalRecordCount: 0,
+      sortable: {
+        order: "id",
+        sort: "asc",
+      },
+    });
+    /**
+     * Search Event
+     */
+    const doSearch = (offset, limit, order, sort) => {
+      table.isLoading = true;
+      setTimeout(() => {
+        table.isReSearch = offset == undefined ? true : false;
+        if (offset >= 10 || limit >= 20) {
+          limit = 20;
+        }
+        if (sort == "asc") {
+          table.rows = sampleData1(offset, limit);
+        } else {
+          table.rows = sampleData2(offset, limit);
+        }
+        table.totalRecordCount = 20;
+        table.sortable.order = order;
+        table.sortable.sort = sort;
+      }, 600);
+    };
+    // First get data
+    doSearch(0, 10, "id", "asc");
     return {
-      //TODO Remove any un-used items from here
-      editing: this.editMode,
-      clientName: "",
-      title: "",
-      driverName: "",
-      appDate: "",
-      pickupAddress: "",
-      dropoffAddress: "",
-      clientNotes: "",
-      clients: [],
+      table,
+      doSearch,
     };
   },
-  mounted() {
-    this.getClients(); // TODO: Update to 'watch'
-  },
-  methods: {
-    getClients() {
-      this.$axios
-        .get("/api/clients")
-        .then((clientsdata) => {
-          console.log(clientsdata);
-          this.clients = clientsdata.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-  },
-};
+});
 </script>
 
 <style lang="scss" scoped>
+
 </style>
