@@ -100,6 +100,7 @@
 </template>
 
 <script>
+  import { getAppointmentById, getClients, getDrivers } from "./../../js/endpoints"
   export default {
     components: {
     },
@@ -134,7 +135,7 @@
     },
     methods: {
       submitForm() {
-        this.$axios.post('/api/appointment/store', {
+        const appointment = {
           title: this.title,
           clientName: this.clientName,
           driverName: this.driverName,
@@ -142,32 +143,16 @@
           pickupAddress: this.pickupAddress,
           dropoffAddress: this.dropoffAddress,
           clientNotes: this.clientNotes
-        }).then(response => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+        }
+        getAppointmentById(appointment)
       },
 
-      getDrivers(){
-        this.$axios.get('/api/drivers')
-          .then((driversdata) => {
-              console.log(driversdata);
-              this.drivers = driversdata.data;
-          }).catch((error) => {
-              console.log(error)
-          })
+      getDriversList(){
+        this.drivers = getDrivers()
       },
 
-      getClients(){
-        this.$axios.get('/api/clients')
-          .then((clientdata) => {
-              console.log(clientdata);
-              this.clients = clientdata.data;
-          }).catch((error) => {
-              console.log(error)
-          })
+      getClientsList(){
+        this.clients = getClients()
       }
     }
   }

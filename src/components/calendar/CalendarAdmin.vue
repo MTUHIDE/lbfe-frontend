@@ -11,6 +11,20 @@ import CalendarPopup from "./CalendarPopup.vue";
 import DeleteModal from "./DeleteModal.vue";
 import SuccessAlert from "../busforms/SuccessAlert.vue";
 
+import {
+  getAppointments,
+  getAppointmentById,
+  editAppointment,
+  getClients,
+  getDrivers,
+} from "./../../network/endpoints";
+
+import {
+  appointment,
+  driver,
+  client
+} from "./../../network/objects"
+
 export default {
   components: {
     FullCalendar, // make the <FullCalendar> tag available
@@ -26,6 +40,7 @@ export default {
       popupTriggers.value[trigger] = !popupTriggers.value[trigger];
     };
     return {
+      // WTF is going on here...
       isShow: false,
       isShowDelete: false,
       addTitle: "",
@@ -105,7 +120,7 @@ export default {
                 eventChange:
                 eventRemove:
                 */
-        events: "/api/appointments",
+        events: getAppointments(),
       },
       popupTriggers,
       TogglePopup,
@@ -129,8 +144,8 @@ export default {
     //   console.log("hidden edit modal");
     // })
     // $(this.$refs.my_modal).on('hidden.bs.modal', this.doSomething);
-    this.getDrivers();
-    this.getClients();
+    this.getDriversList();
+    this.getClientsList();
   },
   methods: {
     deleteSuccess() {
@@ -162,17 +177,8 @@ export default {
         });
     },
     eventResize(e) {
-      this.$axios
-        .put("/api/appointment/update-date/" + e.event.id, {
-          start: e.event.start,
-          end: e.event.end,
-        })
-        .then((response) => {
-          this.showAlert();
-        })
-        .catch((error) => {
-          console.log(error.response.data);
-        });
+      const appointment = {} // TODO - figure out what and how to send this
+      editAppointment(appointment)
     },
     doSomething() {
       console.log("edit modal closed");
@@ -249,28 +255,12 @@ export default {
           console.error(error.response.data);
         });
     },
-
-    getDrivers() {
-      this.$axios
-        .get("/api/drivers")
-        .then((driversdata) => {
-          this.addDrivers = driversdata.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    getDriversList() {
+      this.addDrivers = getDrivers();
     },
 
-    getClients() {
-      this.$axios
-        .get("/api/clients")
-        .then((clientdata) => {
-          this.addClients = clientdata.data;
-          console.log(this.addClients);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    getClientsList() {
+      this.addClients = getClients();
     },
 
     editSuccess() {
