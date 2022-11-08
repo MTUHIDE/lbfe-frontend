@@ -4,6 +4,7 @@ import * as Msal from 'msal';
 import msalConfig from '../../msal/msalConfig'
 
 export default {
+  name: "NavBar",
   props: {},
   components: { NavbarLink },
   data() {

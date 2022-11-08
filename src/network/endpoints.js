@@ -18,8 +18,12 @@ const appointmentUrl = baseUrl + '/appointment'
 // Call the getAllAppointments route in our backend
 // TODO - **Find a better way**
 export async function getAppointments(startDate, endDate) {
+
+    // TODO - Add date input prune check
     const requestUrl = appointmentUrl + getList + `?startDate=${startDate}&endDate=${endDate}`
-    return await axios.get(requestUrl)
+    const response = await axios.get(requestUrl)
+
+    return response.data // Contains { status, count, appointment } and excludes raw meta
 }
 
 // Retrieve specified Appointment by Id

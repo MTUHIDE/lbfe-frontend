@@ -1,18 +1,20 @@
 <script>
-import Calendar from "../../components/calendar/CalendarAdmin.vue";
+import CalendarComponent from "../../components/calendar/CalendarComponent.vue";
 
 export default {
   props: {},
-  components: { Calendar },
+  components: { CalendarComponent },
   setup() {
-    return {};
+    return {
+
+    };
   },
 };
 </script>
 
 <template>
   <div class="text-center">
-    <Calendar />
+      <CalendarComponent />
   </div>
 </template>
 

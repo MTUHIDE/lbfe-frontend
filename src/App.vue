@@ -1,4 +1,5 @@
 <script>
+import NavBar from "./components/navbar/Navbar.vue"
 require("./css/main-style.css");
 
 export default {
