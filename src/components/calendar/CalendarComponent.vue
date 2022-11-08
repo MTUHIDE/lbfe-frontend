@@ -1,6 +1,10 @@
 <template>
-  <div class="calendar-widget-wrapper">
-    <div
+  <div>
+    <div class="widget-wrapper calendar-header-widget">
+      <h1><i class="icon fas fa-calendar-alt" />         Calendar</h1>
+    </div>
+
+    <!-- <div
       class="modal fade"
       id="addAppointmentModal"
       tabindex="-1"
@@ -41,7 +45,7 @@
                   required
                 />
               </div>
-<!-- 
+
               <div class="mb-3">
                 <label for="name" class="form-label">Elder: </label>
                 <select
@@ -60,9 +64,9 @@
                     {{ addClientId.client_name }}CLIENTNAME
                   </option>
                 </select>
-              </div> -->
+              </div>
 
-              <!-- <div class="mb-3">
+              <div class="mb-3">
                 <label for="driver" class="form-label">Driver: </label>
                 <select
                   id="driver"
@@ -80,7 +84,7 @@
                     {{ addDriverId.driver_name }}DRIVERNAME
                   </option>
                 </select>
-              </div> -->
+              </div>
 
               <div class="mb-3">
                 <label for="dateTime" class="form-label"
@@ -164,9 +168,11 @@
           </div>
         </div>
       </div>
+    </div> -->
+    <div class="widget-wrapper full-calendar-widget">
+      <full-calendar :options="calendarOptions" />
+      {{ appointmentEvents }}
     </div>
-
-    <full-calendar :options="calendarOptions" />
   </div>
 </template>
 
@@ -179,14 +185,17 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ref } from "vue";
 import { Modal } from "bootstrap";
-// import CalendarPopup from "./CalendarPopup.vue"; // TODO
-// import DeleteModal from "./DeleteModal.vue"; // TODO
-// import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
+import CalendarPopup from "./CalendarPopup.vue"; // TODO
+import DeleteModal from "./DeleteModal.vue"; // TODO
+import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
 
 export default {
   name: "CalendarComponent",
   components: {
     FullCalendar,
+    CalendarPopup,
+    DeleteModal,
+    SuccessAlert,
   },
 
   data() {
@@ -197,9 +206,10 @@ export default {
     };
 
     return {
-      selectedAppointmentId: null,  // Current appointment object being looked at
-      appointments: {},             // stores ALL loaded appointments
-      count: 0,                     // Total number of appointments loaded
+      selectedAppointmentId: null, // Current appointment object being looked at
+      appointmentEvents: {},
+      appointments: {}, // stores ALL loaded appointments
+      count: 0, // Total number of appointments loaded
 
       isShow: false,
       isShowDelete: false,
@@ -256,14 +266,16 @@ export default {
         // If a user clicks on anything, we can tie those clicks to events and fire functions from them
         dateClick: this.handleDateClick,
         eventDrop: this.handleEventDrop,
-        eventResize: this.eventResize,     
-        
+        eventResize: this.eventResize,
+
         // Passing event as function so we can snag meta
-        eventClick: (clickData) => { 
-          this.selectAppointment(clickData.event.extendedProps["appointmentId"]);
+        eventClick: (clickData) => {
+          this.selectAppointment(clickData);
         },
-        eventsSet: this.handleEvents,   // Fire handleEvents function
-        events: this.appointments,      // Bind to appointments object
+        // eventsSet: this.handleEvents, // Fire handleEvents function
+        events: async () => {
+          return await this.loadAppointments;
+        }, // Bind to appointments object
       },
 
       // Export our functions for controlling modals interanlly (not global)
@@ -274,15 +286,11 @@ export default {
 
   // Called whenever the component is freshly loaded
   mounted() {
-    this.loadAppointments(),
-      (this.cpModal = new Modal(
-        document.getElementById("appointmentModal"),
-        null
-    )),
+    this.loadAppointments();
 
     // Instatiate Modals
-    this.cpModal = new Modal(document.getElementById("appointmentModal"), null );
-    this.cpAddModal = new Modal( document.getElementById("addAppointmentModal"), null );
+    // this.cpModal = new Modal(document.getElementById("appointmentModal"), null );
+    // this.cpAddModal = new Modal( document.getElementById("addAppointmentModal"), null );
   },
 
   methods: {
@@ -297,14 +305,28 @@ export default {
       var endDate = new Date();
       endDate.setDate(endDate.getDate() + 30);
 
+      // Calls our endpoint to retrive appointments given a date range
       const data = await getAppointments(
         startDate.toISOString(),
         endDate.toISOString()
       );
 
-      // Load appointments into 'appointments' object
+      // Destructure and rename our appointment event to match FullCalendar's event object format
+      this.appointmentEvents = data.appointments.map((a) => {
+        return {
+          // Necessary Fields for Full Calendar to understand what it's looking at
+          title: a.title,
+          start: a.startDate.toString().slice(0, 10),
+          end: a.endDate.toString().slice(0, 10),
+          allDay: a.isAllDay,
+          // Dump the whole event in as an extended prop
+          data: a,
+        };
+      });
       this.appointments = data.appointments;
       this.count = data.count;
+
+      return this.appointmentEvents;
     },
 
     // Set the given object as the current focused appointment
@@ -315,12 +337,12 @@ export default {
     },
 
     showAddAppointmentModal(e) {
-      this.cpAddModal.show();
+      //   this.cpAddModal.show();
       this.selectAppointment(e);
     },
 
     hideModal() {
-      this.cpAddModal.hide();
+      //   this.cpAddModal.hide();
     },
 
     handleEventDrop(e) {
@@ -342,12 +364,22 @@ export default {
 </script>
 
 <style scoped>
-.calendar-widget-wrapper {
+.calendar-header-widget {
+  text-align: left;
+  padding-left: 1.3em;
+  padding-top: 8px;
+  padding-bottom: 1px;
+}
+
+.full-calendar-widget {
+  padding: 2em;
+}
+
+.widget-wrapper {
   background-color: #ffffff;
-  border-radius: 2em;
+  border-radius: 1.3em;
   box-shadow: 2px 3px 10px #ad9b9b;
   margin: 1em;
-  padding: 2em;
 }
 
 .cMonthView {
