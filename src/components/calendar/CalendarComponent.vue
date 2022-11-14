@@ -177,7 +177,7 @@
 
       <!-- What to show on load -->
       <div v-show="!isLoading">
-        <full-calendar :options="calendarOptions" />
+        <full-calendar ref="fullCalendar" :options="calendarOptions" />
         <p class="count-header">Showing {{ count }} Appointments</p>
       </div>
     </div>
@@ -186,16 +186,16 @@
 
 <script>
 /* eslint-disable */
-import { getAppointments } from "../../network/endpoints"
-import FullCalendar from "@fullcalendar/vue3"
-import dayGridPlugin from "@fullcalendar/daygrid"
-import timeGridPlugin from "@fullcalendar/timegrid"
-import interactionPlugin from "@fullcalendar/interaction"
-import { ref } from "vue"
-import { Modal } from "bootstrap"
-import CalendarPopup from "./CalendarPopup.vue" // TODO
-import DeleteModal from "./DeleteModal.vue" // TODO
-import SuccessAlert from "../busforms/SuccessAlert.vue" // TODO
+import { getAppointments } from "../../network/endpoints";
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { ref } from "vue";
+import { Modal } from "bootstrap";
+import CalendarPopup from "./CalendarPopup.vue"; // TODO
+import DeleteModal from "./DeleteModal.vue"; // TODO
+import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
 
 export default {
   name: "CalendarComponent",
@@ -208,10 +208,10 @@ export default {
 
   data() {
     // Custom functions (NOT TO BE EXPORTED) to handle modal hiding/showing
-    const popupTriggers = ref({ buttonTrigger: false })
+    const popupTriggers = ref({ buttonTrigger: false });
     const TogglePopup = (trigger) => {
-      popupTriggers.value[trigger] = !popupTriggers.value[trigger]
-    }
+      popupTriggers.value[trigger] = !popupTriggers.value[trigger];
+    };
 
     return {
       selectedAppointmentId: null, // Current appointment object being looked at
@@ -219,6 +219,8 @@ export default {
       appointments: {}, // stores ALL loaded appointments
       count: 0, // Total number of appointments loaded
       isLoading: false,
+      lookAtDate: null,
+      calendarApi: ref(null), // Pulls ref from full-calendar on mount
 
       isShow: false,
       isShowDelete: false,
@@ -260,7 +262,19 @@ export default {
             hint: "Create appointment",
             // icon: 'fa fas fa-plus',
             click: (e) => {
-              this.showAddAppointmentModal(e)
+              this.showAddAppointmentModal(e);
+            },
+          },
+          prev: {
+            // this overrides the prev button
+            click: () => {
+              this.forcePrevPageLoad();
+            },
+          },
+          next: {
+            // this overrides the next button
+            click: () => {
+              this.forceNextPageLoad();
             },
           },
         },
@@ -279,7 +293,7 @@ export default {
 
         // Passing event as function so we can snag meta
         eventClick: (clickData) => {
-          this.selectAppointment(clickData)
+          this.selectAppointment(clickData);
         },
 
         // Bound to appointmentEvents object under the hood
@@ -289,18 +303,20 @@ export default {
       // Export our functions for controlling modals interanlly (not global)
       popupTriggers,
       TogglePopup,
-    }
+    };
   },
 
   // Called whenever the component is freshly loaded
   mounted() {
+    this.calendarApi = this.$refs.fullCalendar.getApi();
+
     // Instatiate Modals
     // this.cpModal = new Modal(document.getElementById("appointmentModal"), null )
     // this.cpAddModal = new Modal( document.getElementById("addAppointmentModal"), null )
   },
 
   created() {
-    this.loadAppointments()
+    this.loadAppointments();
   },
 
   methods: {
@@ -309,17 +325,26 @@ export default {
         Start with today, assume [-7, +30] days from "Now" 
         Backend assumes bad timezone
     */
-    async loadAppointments() {
-      var startDate = new Date()
-      startDate.setDate(startDate.getDate() - 30)
-      var endDate = new Date()
-      endDate.setDate(endDate.getDate() + 30)
+    async loadAppointments(moveToThisDate) {
+      if (!this.lookAtDate) {
+        this.lookAtDate = new Date(); // Set to now
+        console.log(this.lookAtDate);
+      } else if (!!moveToThisDate) {
+        this.lookAtDate = moveToThisDate;
+      }
+
+      let startDate = new Date(this.lookAtDate);
+      let endDate = new Date(this.lookAtDate);
+
+      // Adjust by +- 30 days
+      startDate.setDate(startDate.getDate() - 30);
+      endDate.setDate(endDate.getDate() + 30);
 
       // Calls our endpoint to retrive appointments given a date range
       const data = await getAppointments(
         startDate.toISOString(),
         endDate.toISOString()
-      )
+      );
 
       // Destructure and rename our appointment event to match FullCalendar's event object format
       this.appointmentEvents = data.appointments.map((event) => {
@@ -329,35 +354,59 @@ export default {
           start: new Date(event.startDate),
           end: new Date(event.endDate),
           allDay: true,
+
           // Dump the whole event in as an extended prop
           data: event,
-        }
-      })
+        };
+      });
 
       // Snag meta, and set total count
-      this.appointments = data.appointments
-      this.count = data.count
+      this.appointments = data.appointments;
+      this.count = data.count;
 
-      this.reloadAppointments()
+      this.reloadAppointments();
     },
 
     // Resets appointments to current appointmentEvents
     reloadAppointments() {
-      this.isLoading = true
-      this.calendarOptions.events = this.appointmentEvents
-      this.isLoading = false
+      this.isLoading = true;
+      this.calendarOptions.events = this.appointmentEvents;
+      this.isLoading = false;
     },
 
     // Set the given object as the current focused appointment
     selectAppointment(newId) {
-      console.log(newId)
-      if (this.selectedAppointmentId === newId) return
-      this.selectedAppointmentId = newId
+      console.log(newId);
+      if (this.selectedAppointmentId === newId) return;
+      this.selectedAppointmentId = newId;
+    },
+
+    updateLookAtDate(loadAhead) {
+      // If 'loadAhead', check to adjust by one day, 7 days, or 30 days, else apply backwards
+      const adjustByDays = 30;
+
+      if (loadAhead)
+        this.lookAtDate.setDate(this.lookAtDate.getDate() + adjustByDays);
+      else this.lookAtDate.setDate(this.lookAtDate.getDate() - adjustByDays);
+
+      this.loadAppointments();
+    },
+
+    // Calls full-calendar api ref to move us forward, then fire our updateLookAtDate
+    forceNextPageLoad() {
+      this.calendarApi.next();
+      this.updateLookAtDate(true); // True --> Load ahead
+    },
+
+    // Calls full-calendar api ref to move us backward, then fire our updateLookAtDate
+    forcePrevPageLoad() {
+      this.calendarApi.prev();
+      this.updateLookAtDate(false); // False --> Load behind
     },
 
     showAddAppointmentModal(e) {
       //   this.cpAddModal.show()
-      this.selectAppointment(e)
+      this.selectAppointment(e);
     },
 
     hideModal() {
@@ -370,16 +419,16 @@ export default {
 
     handleDateClick: function (arg) {
       // Get api instance
-      // let calendarApi = this.$refs.fullCalendar.getApi()
+      // console.log(this.calendarApi);
       // let newDate = arg["dateStr"]
       // // go to clicked on date and switch to day view
       // calendarApi.changeView("timeGridDay", newDate)
     },
     handleEvents(events) {
-      this.appointmentEvents = events
+      this.appointmentEvents = events;
     },
   },
-}
+};
 </script>
 
 <style scoped>
