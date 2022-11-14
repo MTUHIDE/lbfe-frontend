@@ -220,7 +220,7 @@ export default {
       isLoading: false,
       lookAtDate: null,
       calendarApi: ref(null), // Pulls ref from full-calendar on mount
-      lastLoadedCalView: "dayGridMonth", // We use this to logically track and adjust the 'lookAtDate'
+      lastLoadedCalView: "dayGridMonth", // Should be used to track current view for the user, so on reload they reset
 
       // Modal v-show binds
       isShow: false,
@@ -329,12 +329,19 @@ export default {
   },
 
   created() {
-    this.reloadAppointments();
+    this.reloadAppointments(); // Call calendar reload
   },
 
   methods: {
     // Full Calendar Helper Functions
     // =====================================================================
+
+    // Resets appointments to current appointmentEvents
+    reloadAppointments() {
+      this.isLoading = true;
+      this.loadAppointments();
+      this.isLoading = false;
+    },
 
     /* 
         User sends request for [startDate, endDate] range. 
@@ -378,7 +385,9 @@ export default {
       this.count = data.count;
     },
 
-    // If loadAhead is truthy, load forward a month, else load backwards
+    // If 'loadAhead' is truthy, load forward, else load backwards. Defaults to +- 1 day
+    // 'lookAtDate' is the middle ground value we use when looking up our date range. So it's
+    // is always saying to load all events +- 30 days from 'lookAtDate'
     updateAppDateLoadRange(loadAhead) {
       var adjustBy = 1; // Days when isMonth = false, otherwise is in # of months
       let isMonth = false; // bool to fire update date, or update by month
@@ -388,7 +397,7 @@ export default {
         // Be smart about adjusting our look ahead
         switch (this.calendarApi.view.type) {
           case "dayGridMonth":
-            adjustBy = 1; // 'Days' get converted to --> 'Month'
+            isMonth = true; // 'Days' get converted to --> 'Month'
             break;
           case "timeGridWeek":
             adjustBy = 7; // Add an additional week
@@ -409,15 +418,8 @@ export default {
         }
       }
 
-      // Calls a calendar refresh
+      // Call a calendar refresh
       this.reloadAppointments();
-    },
-
-    // Resets appointments to current appointmentEvents
-    reloadAppointments() {
-      this.isLoading = true;
-      this.loadAppointments();
-      this.isLoading = false;
     },
 
     // Calls edit appointment route on the given appointment
@@ -449,6 +451,7 @@ export default {
     handleDateClick(e) {
       this.lookAtDate = new Date(e.date); // reset our day loading, then move
       this.calendarApi.changeView("timeGridDay", this.lookAtDate);
+      this.lastLoadedCalView = this.calendarApi.view.type; // reset last loaded view for the user
       this.reloadAppointments();
     },
 
@@ -478,7 +481,7 @@ export default {
     // =====================================================================
 
     showAddAppointmentModal(e) {
-      console.log(e)
+      console.log(e);
     },
 
     hideModal() {},
