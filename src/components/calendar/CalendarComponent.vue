@@ -186,7 +186,7 @@
 
 <script>
 /* eslint-disable */
-import { getAppointments } from "../../network/endpoints";
+import { getAppointments, editAppointment } from "../../network/endpoints";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -214,14 +214,15 @@ export default {
     };
 
     return {
-      selectedAppointmentId: null, // Current appointment object being looked at
-      appointmentEvents: {},
-      appointments: {}, // stores ALL loaded appointments
+      selectedAppointment: null, // Current appointment object being looked at
+      appointments: {}, // stores ALL loaded appointments. THIS IS NOT fullCalendar.calendarOptions.events!!! <-- that gets casted from this
       count: 0, // Total number of appointments loaded
       isLoading: false,
       lookAtDate: null,
       calendarApi: ref(null), // Pulls ref from full-calendar on mount
+      lastLoadedCalView: "dayGridMonth", // We use this to logically track and adjust the 'lookAtDate'
 
+      // Modal v-show binds
       isShow: false,
       isShowDelete: false,
 
@@ -248,7 +249,7 @@ export default {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
         scrollTime: "09:00:00",
         nowIndicator: true,
-        initialView: "dayGridMonth",
+        initialView: this.lastLoadedCalView, // Set this to match our cached looked at view
         editable: true,
         selectable: true,
         selectMirror: true,
@@ -260,43 +261,55 @@ export default {
           addAppointmentButton: {
             text: "+ Create",
             hint: "Create appointment",
-            // icon: 'fa fas fa-plus',
             click: (e) => {
               this.showAddAppointmentModal(e);
             },
           },
+          // Overrides the FullCalendar prev button
           prev: {
-            // this overrides the prev button
             click: () => {
               this.forcePrevPageLoad();
             },
           },
+          // Overrides the FullCalendar next button
           next: {
-            // this overrides the next button
             click: () => {
               this.forceNextPageLoad();
             },
           },
+          // Overrides the FullCalendar today button
+          today: {
+            text: "Today",
+            click: (e) => {
+              this.forceResetView();
+            },
+          },
         },
 
-        // Customize the toolbar with some custom buttons
+        // Define our desired header
         headerToolbar: {
           left: "addAppointmentButton prev,next today",
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         },
 
-        // If a user clicks on anything, we can tie those clicks to events and fire functions from them
-        dateClick: this.handleDateClick,
-        eventDrop: this.handleEventDrop,
-        eventResize: this.eventResize,
-
-        // Passing event as function so we can snag meta
-        eventClick: (clickData) => {
-          this.selectAppointment(clickData);
+        // Fire functions on user interaction
+        dateClick: (e) => {
+          this.handleDateClick(e);
         },
 
-        // Bound to appointmentEvents object under the hood
+        // Both of these call the same edit function, because they both do the same date editing
+        eventDrop: (e) => {
+          this.handleEventEdit(e);
+        },
+        eventResize: (e) => {
+          this.handleEventEdit(e);
+        },
+        eventClick: (e) => {
+          this.selectAppointment(e);
+        },
+
+        // Bound to stream with loadAppointments
         events: [],
       },
 
@@ -316,22 +329,22 @@ export default {
   },
 
   created() {
-    this.loadAppointments();
+    this.reloadAppointments();
   },
 
   methods: {
+    // Full Calendar Helper Functions
+    // =====================================================================
+
     /* 
         User sends request for [startDate, endDate] range. 
-        Start with today, assume [-7, +30] days from "Now" 
-        Backend assumes bad timezone
+        Start with today, leverage 'lookAtDate' for accurate range
+        Backend assumes bad timezone, handles timezone conversion
     */
     async loadAppointments(moveToThisDate) {
-      if (!this.lookAtDate) {
-        this.lookAtDate = new Date(); // Set to now
-        console.log(this.lookAtDate);
-      } else if (!!moveToThisDate) {
-        this.lookAtDate = moveToThisDate;
-      }
+      // If it's our first time, remember it (Set to now)
+      if (!this.lookAtDate) this.lookAtDate = new Date();
+      else if (!!moveToThisDate) this.lookAtDate = moveToThisDate;
 
       let startDate = new Date(this.lookAtDate);
       let endDate = new Date(this.lookAtDate);
@@ -342,91 +355,133 @@ export default {
 
       // Calls our endpoint to retrive appointments given a date range
       const data = await getAppointments(
-        startDate.toISOString(),
+        startDate.toISOString(), // Pass our startDate + endDate
         endDate.toISOString()
       );
 
       // Destructure and rename our appointment event to match FullCalendar's event object format
-      this.appointmentEvents = data.appointments.map((event) => {
+      this.calendarOptions.events = data.appointments.map((event) => {
         return {
-          // Necessary Fields for Full Calendar to understand what it's looking at
+          // Necessary Fields for a Full Calendar event
           title: event.title,
           start: new Date(event.startDate),
           end: new Date(event.endDate),
-          allDay: true,
+          allDay: event.isAllDay,
 
-          // Dump the whole event in as an extended prop
-          data: event,
+          // Dump the whole event as an 'extendedProp'
+          extendedProps: event,
         };
       });
 
       // Snag meta, and set total count
       this.appointments = data.appointments;
       this.count = data.count;
+    },
 
+    // If loadAhead is truthy, load forward a month, else load backwards
+    updateAppDateLoadRange(loadAhead) {
+      var adjustBy = 1; // Days when isMonth = false, otherwise is in # of months
+      let isMonth = false; // bool to fire update date, or update by month
+
+      // If we got here without loading the calendar, abort to loading appointments
+      if (!!this.lookAtDate) {
+        // Be smart about adjusting our look ahead
+        switch (this.calendarApi.view.type) {
+          case "dayGridMonth":
+            adjustBy = 1; // 'Days' get converted to --> 'Month'
+            break;
+          case "timeGridWeek":
+            adjustBy = 7; // Add an additional week
+            break;
+          default:
+            break;
+        }
+
+        // 'lookAtDate' is global --> loadAppointments will pick it up
+        if (isMonth) {
+          !!loadAhead
+            ? this.lookAtDate.setMonth(this.lookAtDate.getMonth() + adjustBy)
+            : this.lookAtDate.setMonth(this.lookAtDate.getMonth() - adjustBy);
+        } else {
+          !!loadAhead
+            ? this.lookAtDate.setDate(this.lookAtDate.getDate() + adjustBy)
+            : this.lookAtDate.setDate(this.lookAtDate.getDate() - adjustBy);
+        }
+      }
+
+      // Calls a calendar refresh
       this.reloadAppointments();
     },
 
     // Resets appointments to current appointmentEvents
     reloadAppointments() {
       this.isLoading = true;
-      this.calendarOptions.events = this.appointmentEvents;
+      this.loadAppointments();
       this.isLoading = false;
     },
 
-    // Set the given object as the current focused appointment
-    selectAppointment(newId) {
-      console.log(newId);
-      if (this.selectedAppointmentId === newId) return;
-      this.selectedAppointmentId = newId;
+    // Calls edit appointment route on the given appointment
+    async updateAppointment() {
+      const response = await editAppointment(this.selectedAppointment);
     },
 
-    updateLookAtDate(loadAhead) {
-      // If 'loadAhead', check to adjust by one day, 7 days, or 30 days, else apply backwards
-      const adjustByDays = 30;
-
-      if (loadAhead)
-        this.lookAtDate.setDate(this.lookAtDate.getDate() + adjustByDays);
-      else this.lookAtDate.setDate(this.lookAtDate.getDate() - adjustByDays);
-
-      this.loadAppointments();
+    // Destructure appointment from extendedProp from FullCalendar click event and set it as active
+    selectAppointment(e) {
+      const newAppointmnet = e.event._def.extendedProps;
+      if (
+        !this.selectedAppointment ||
+        this.selectedAppointment.appointmentId != newAppointmnet.appointmentId
+      ) {
+        // Proxy's are funky, but prevent type smashing, so just gotta deal sometimes
+        this.selectedAppointment = JSON.parse(JSON.stringify(newAppointmnet)); // De-proxy
+      }
     },
 
-    // Calls full-calendar api ref to move us forward, then fire our updateLookAtDate
+    // Called whenever a user clicks and drags an event in any way
+    handleEventEdit(e) {
+      this.selectAppointment(e); // will grab the appointment from extendedProps for us
+      this.selectedAppointment.startDate = new Date(e.event.start);
+      this.selectedAppointment.endDate = new Date(e.event.end);
+      this.updateAppointment(); // Leverages 'this.selectedAppointment'
+    },
+
+    // If a user selects a date, move to that date
+    handleDateClick(e) {
+      this.lookAtDate = new Date(e.date); // reset our day loading, then move
+      this.calendarApi.changeView("timeGridDay", this.lookAtDate);
+      this.reloadAppointments();
+    },
+
+    // Full Calendar Custom Buttons/Overrides Functions
+    // =====================================================================
+
+    // Calls full-calendar api ref to move us forward, then fire our updateAppDateLoadRange
     forceNextPageLoad() {
       this.calendarApi.next();
-      this.updateLookAtDate(true); // True --> Load ahead
+      this.updateAppDateLoadRange(true); // True --> Load ahead
     },
 
-    // Calls full-calendar api ref to move us backward, then fire our updateLookAtDate
+    // Calls full-calendar api ref to move us backward, then fire our updateAppDateLoadRange
     forcePrevPageLoad() {
       this.calendarApi.prev();
-      this.updateLookAtDate(false); // False --> Load behind
+      this.updateAppDateLoadRange(false); // False --> Load behind
     },
+
+    // Reset 'lookAtDate', and reload appointments
+    forceResetView() {
+      this.lookAtDate = null;
+      this.calendarApi.today();
+      this.updateAppDateLoadRange();
+    },
+
+    // Modal Controls
+    // =====================================================================
 
     showAddAppointmentModal(e) {
-      //   this.cpAddModal.show()
-      this.selectAppointment(e);
+      console.log(e)
     },
 
-    hideModal() {
-      //   this.cpAddModal.hide()
-    },
-
-    handleEventDrop(e) {
-      // TODO - Call Update appointment with new start/endDate
-    },
-
-    handleDateClick: function (arg) {
-      // Get api instance
-      // console.log(this.calendarApi);
-      // let newDate = arg["dateStr"]
-      // // go to clicked on date and switch to day view
-      // calendarApi.changeView("timeGridDay", newDate)
-    },
-    handleEvents(events) {
-      this.appointmentEvents = events;
-    },
+    hideModal() {},
   },
 };
 </script>
