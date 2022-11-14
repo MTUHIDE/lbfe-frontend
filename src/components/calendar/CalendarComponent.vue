@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="widget-wrapper calendar-header-widget">
-      <h1><i class="icon fas fa-calendar-alt" />         Calendar</h1>
+      <h1><i class="icon fas fa-calendar-alt" /> Calendar</h1>
     </div>
 
     <!-- <div
@@ -20,7 +20,7 @@
             class="modal-header"
             style="
                {
-                border: none;
+                border: none
               }
             "
           >
@@ -170,24 +170,32 @@
       </div>
     </div> -->
     <div class="widget-wrapper full-calendar-widget">
-      <full-calendar :options="calendarOptions" />
-      {{ appointmentEvents }}
+      <!-- What to show while loading -->
+      <div v-show="isLoading">
+        <h3>Loading Events...</h3>
+      </div>
+
+      <!-- What to show on load -->
+      <div v-show="!isLoading">
+        <full-calendar :options="calendarOptions" />
+        <p class="count-header">Showing {{ count }} Appointments</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-import { getAppointments } from "../../network/endpoints";
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import { ref } from "vue";
-import { Modal } from "bootstrap";
-import CalendarPopup from "./CalendarPopup.vue"; // TODO
-import DeleteModal from "./DeleteModal.vue"; // TODO
-import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
+import { getAppointments } from "../../network/endpoints"
+import FullCalendar from "@fullcalendar/vue3"
+import dayGridPlugin from "@fullcalendar/daygrid"
+import timeGridPlugin from "@fullcalendar/timegrid"
+import interactionPlugin from "@fullcalendar/interaction"
+import { ref } from "vue"
+import { Modal } from "bootstrap"
+import CalendarPopup from "./CalendarPopup.vue" // TODO
+import DeleteModal from "./DeleteModal.vue" // TODO
+import SuccessAlert from "../busforms/SuccessAlert.vue" // TODO
 
 export default {
   name: "CalendarComponent",
@@ -200,16 +208,17 @@ export default {
 
   data() {
     // Custom functions (NOT TO BE EXPORTED) to handle modal hiding/showing
-    const popupTriggers = ref({ buttonTrigger: false });
+    const popupTriggers = ref({ buttonTrigger: false })
     const TogglePopup = (trigger) => {
-      popupTriggers.value[trigger] = !popupTriggers.value[trigger];
-    };
+      popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+    }
 
     return {
       selectedAppointmentId: null, // Current appointment object being looked at
       appointmentEvents: {},
       appointments: {}, // stores ALL loaded appointments
       count: 0, // Total number of appointments loaded
+      isLoading: false,
 
       isShow: false,
       isShowDelete: false,
@@ -251,7 +260,7 @@ export default {
             hint: "Create appointment",
             // icon: 'fa fas fa-plus',
             click: (e) => {
-              this.showAddAppointmentModal(e);
+              this.showAddAppointmentModal(e)
             },
           },
         },
@@ -270,27 +279,28 @@ export default {
 
         // Passing event as function so we can snag meta
         eventClick: (clickData) => {
-          this.selectAppointment(clickData);
+          this.selectAppointment(clickData)
         },
-        // eventsSet: this.handleEvents, // Fire handleEvents function
-        events: async () => {
-          return await this.loadAppointments;
-        }, // Bind to appointments object
+
+        // Bound to appointmentEvents object under the hood
+        events: [],
       },
 
       // Export our functions for controlling modals interanlly (not global)
       popupTriggers,
       TogglePopup,
-    };
+    }
   },
 
   // Called whenever the component is freshly loaded
   mounted() {
-    this.loadAppointments();
-
     // Instatiate Modals
-    // this.cpModal = new Modal(document.getElementById("appointmentModal"), null );
-    // this.cpAddModal = new Modal( document.getElementById("addAppointmentModal"), null );
+    // this.cpModal = new Modal(document.getElementById("appointmentModal"), null )
+    // this.cpAddModal = new Modal( document.getElementById("addAppointmentModal"), null )
+  },
+
+  created() {
+    this.loadAppointments()
   },
 
   methods: {
@@ -300,49 +310,58 @@ export default {
         Backend assumes bad timezone
     */
     async loadAppointments() {
-      var startDate = new Date();
-      startDate.setDate(startDate.getDate() - 7);
-      var endDate = new Date();
-      endDate.setDate(endDate.getDate() + 30);
+      var startDate = new Date()
+      startDate.setDate(startDate.getDate() - 30)
+      var endDate = new Date()
+      endDate.setDate(endDate.getDate() + 30)
 
       // Calls our endpoint to retrive appointments given a date range
       const data = await getAppointments(
         startDate.toISOString(),
         endDate.toISOString()
-      );
+      )
 
       // Destructure and rename our appointment event to match FullCalendar's event object format
-      this.appointmentEvents = data.appointments.map((a) => {
+      this.appointmentEvents = data.appointments.map((event) => {
         return {
           // Necessary Fields for Full Calendar to understand what it's looking at
-          title: a.title,
-          start: a.startDate.toString().slice(0, 10),
-          end: a.endDate.toString().slice(0, 10),
-          allDay: a.isAllDay,
+          title: event.title,
+          start: new Date(event.startDate),
+          end: new Date(event.endDate),
+          allDay: true,
           // Dump the whole event in as an extended prop
-          data: a,
-        };
-      });
-      this.appointments = data.appointments;
-      this.count = data.count;
+          data: event,
+        }
+      })
 
-      return this.appointmentEvents;
+      // Snag meta, and set total count
+      this.appointments = data.appointments
+      this.count = data.count
+
+      this.reloadAppointments()
+    },
+
+    // Resets appointments to current appointmentEvents
+    reloadAppointments() {
+      this.isLoading = true
+      this.calendarOptions.events = this.appointmentEvents
+      this.isLoading = false
     },
 
     // Set the given object as the current focused appointment
     selectAppointment(newId) {
-      console.log(newId);
-      if (this.selectedAppointmentId === newId) return;
-      this.selectedAppointmentId = newId;
+      console.log(newId)
+      if (this.selectedAppointmentId === newId) return
+      this.selectedAppointmentId = newId
     },
 
     showAddAppointmentModal(e) {
-      //   this.cpAddModal.show();
-      this.selectAppointment(e);
+      //   this.cpAddModal.show()
+      this.selectAppointment(e)
     },
 
     hideModal() {
-      //   this.cpAddModal.hide();
+      //   this.cpAddModal.hide()
     },
 
     handleEventDrop(e) {
@@ -351,16 +370,16 @@ export default {
 
     handleDateClick: function (arg) {
       // Get api instance
-      let calendarApi = this.$refs.fullCalendar.getApi();
-      let newDate = arg["dateStr"];
-      // go to clicked on date and switch to day view
-      calendarApi.changeView("timeGridDay", newDate);
+      // let calendarApi = this.$refs.fullCalendar.getApi()
+      // let newDate = arg["dateStr"]
+      // // go to clicked on date and switch to day view
+      // calendarApi.changeView("timeGridDay", newDate)
     },
     handleEvents(events) {
-      this.currentEvents = events;
+      this.appointmentEvents = events
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -369,6 +388,11 @@ export default {
   padding-left: 1.3em;
   padding-top: 8px;
   padding-bottom: 1px;
+}
+
+.count-header {
+  text-align: left;
+  margin: 4px;
 }
 
 .full-calendar-widget {
