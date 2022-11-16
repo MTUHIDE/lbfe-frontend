@@ -4,171 +4,32 @@
       <h1><i class="icon fas fa-calendar-alt" /> Calendar</h1>
     </div>
 
-    <!-- <div
-      class="modal fade"
-      id="addAppointmentModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div
-        class="modal-dialog modal-dialog-scrollable modal-fullscreen-md-down"
-      >
-        <div class="modal-content">
-          <div
-            class="modal-header"
-            style="
-               {
-                border: none
-              }
-            "
-          >
-            <h5 class="modal-title">Add Appointment</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            />
-          </div>
-          <div class="modal-body">
-            <form id="submitForm" @submit.prevent="submitForm">
-              <div class="mb-3">
-                <label for="title" class="form-label">Title: </label>
-                <input
-                  name="title"
-                  type="text"
-                  class="form-control"
-                  id="title"
-                  v-model="addAppointment.addTitle"
-                  required
-                />
-              </div>
+    <modal-component @close="toggleModal" :modalActive="modalActive">
+      <div class="modal-inner calendar-modal">
+        <!-- Modal Body -->
+        <calendar-popup
+          v-show="isAddingAppointment"
+          :title="`Add Appointment`" 
+          :appointment="addAppointment"
+          :driversList="driversList"
+          :eldersList="clientsList"
+          :callOnSave="saveNewAppointment"
+          :callOnClose="hideModal"
+        /> 
+        <!-- <calendar-popup
+          v-show="!isAddingAppointment"
+          :title="'Edit Appointment'"
+          :appointment="selectedAppointment"
+          :driversList="{}"
+          :clientsList="{}"
+          :callOnSave="saveNewAppointment"
+          :callOnClose="hideModal"
+        />  -->
 
-              <div class="mb-3">
-                <label for="name" class="form-label">Elder: </label>
-                <select
-                  id="name"
-                  name="name"
-                  class="form-select"
-                  v-model="addAppointment.selectedClient.addClientId"
-                  required
-                >
-                  <option disabled>--Select an Elder--</option>
-                  <option
-                    v-for="addClientId in addClients"
-                    :key="addClientId.id"
-                    v-bind:value="addClientId.id"
-                  >
-                    {{ addClientId.client_name }}CLIENTNAME
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="driver" class="form-label">Driver: </label>
-                <select
-                  id="driver"
-                  name="driver"
-                  class="form-select"
-                  v-model="addAppointment.selectedDriver.addDriverId"
-                  required
-                >
-                  <option disabled>--Select a Driver--</option>
-                  <option
-                    v-for="addDriverId in addDrivers"
-                    :key="addDriverId.id"
-                    v-bind:value="addDriverId.id"
-                  >
-                    {{ addDriverId.driver_name }}DRIVERNAME
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="dateTime" class="form-label"
-                  >Start Date and Time:
-                </label>
-                <input
-                  id="dateTime"
-                  name="dateTime"
-                  class="form-control"
-                  type="datetime-local"
-                  v-model="addAppointment.addAppDate"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="dateEndTime" class="form-label"
-                  >End Date and Time:
-                </label>
-                <input
-                  id="dateEndTime"
-                  name="dateEndTime"
-                  class="form-control"
-                  type="datetime-local"
-                  v-model="addAppointment.addAppEndDate"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="pickup" class="form-label">Pick up address: </label>
-                <textarea
-                  id="pickup"
-                  name="pickup"
-                  class="form-control"
-                  v-model="addAppointment.addPickupAddress"
-                  required
-                ></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="dropoff" class="form-label"
-                  >Drop off address:
-                </label>
-                <textarea
-                  id="dropoff"
-                  name="dropoff"
-                  class="form-control"
-                  v-model="addAppointment.addDropoffAddress"
-                  required
-                ></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="notes" class="form-label">Notes: </label>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  class="form-control"
-                  v-model="addAppointment.addClientNotes"
-                ></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="submit"
-              id="appointSubmit"
-              form="submitForm"
-              class="btn btn-primary"
-            >
-              Add
-            </button>
-          </div>
-        </div>
+        <!-- End Modal Body -->
       </div>
-    </div> -->
+    </modal-component>
+
     <div class="widget-wrapper full-calendar-widget">
       <!-- What to show while loading -->
       <div v-show="isLoading">
@@ -186,16 +47,22 @@
 
 <script>
 /* eslint-disable */
-import { getAppointments, editAppointment } from "../../network/endpoints";
+import {
+  getAppointments,
+  editAppointment,
+  getDrivers,
+  getClients,
+} from "../../network/endpoints";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ref } from "vue";
-import { Modal } from "bootstrap";
 import CalendarPopup from "./CalendarPopup.vue"; // TODO
 import DeleteModal from "./DeleteModal.vue"; // TODO
 import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
+import ModalComponent from "../modals/ModalComponent.vue";
+import CalendarAdmin from "./CalendarAdmin.vue";
 
 export default {
   name: "CalendarComponent",
@@ -204,27 +71,34 @@ export default {
     CalendarPopup,
     DeleteModal,
     SuccessAlert,
+    ModalComponent,
+    CalendarAdmin,
+  },
+
+  setup() {
+    // When the modal child component loads, snag the ref and link the toggle values
+    const modalActive = ref(false);
+    const toggleModal = () => {
+      modalActive.value = !modalActive.value;
+    };
+    return { modalActive, toggleModal };
   },
 
   data() {
-    // Custom functions (NOT TO BE EXPORTED) to handle modal hiding/showing
-    const popupTriggers = ref({ buttonTrigger: false });
-    const TogglePopup = (trigger) => {
-      popupTriggers.value[trigger] = !popupTriggers.value[trigger];
-    };
-
     return {
       selectedAppointment: null, // Current appointment object being looked at
       appointments: {}, // stores ALL loaded appointments. THIS IS NOT fullCalendar.calendarOptions.events!!! <-- that gets casted from this
       count: 0, // Total number of appointments loaded
       isLoading: false,
       lookAtDate: null,
-      calendarApi: ref(null), // Pulls ref from full-calendar on mount
       lastLoadedCalView: "dayGridMonth", // Should be used to track current view for the user, so on reload they reset
 
       // Modal v-show binds
-      isShow: false,
-      isShowDelete: false,
+      isAddingAppointment: false, // Toggles edit / create mode on modal
+
+      // Refs
+      calendarApi: ref(null), // Pulls ref from full-calendar on mount
+      showAddEditModal: ref(null), // loaded on
 
       // Object to pass a newly created appointment around, and also to save state with
       addAppointment: {
@@ -244,6 +118,12 @@ export default {
         },
       },
 
+      // These get loaded on modal open request
+      driversListCount: 0,
+      clientsListCount: 0,
+      driversList: {}, // TODO - these should be synced to a store so we can use the same cache in other places
+      clientsList: {},
+
       // Define options for fullCalendar
       calendarOptions: {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -262,6 +142,7 @@ export default {
             text: "+ Create",
             hint: "Create appointment",
             click: (e) => {
+              this.isAddingAppointment = true; // This is only place we can create an appointment right now
               this.showAddAppointmentModal(e);
             },
           },
@@ -312,24 +193,19 @@ export default {
         // Bound to stream with loadAppointments
         events: [],
       },
-
-      // Export our functions for controlling modals interanlly (not global)
-      popupTriggers,
-      TogglePopup,
     };
   },
 
   // Called whenever the component is freshly loaded
   mounted() {
     this.calendarApi = this.$refs.fullCalendar.getApi();
-
-    // Instatiate Modals
-    // this.cpModal = new Modal(document.getElementById("appointmentModal"), null )
-    // this.cpAddModal = new Modal( document.getElementById("addAppointmentModal"), null )
+    this.showAddEditModal = this.$refs.toggleModal;
   },
 
   created() {
     this.reloadAppointments(); // Call calendar reload
+    this.loadDriverList(); // These have to get poplated to remove the warnings
+    this.loadClientList();
   },
 
   methods: {
@@ -425,6 +301,7 @@ export default {
     // Calls edit appointment route on the given appointment
     async updateAppointment() {
       const response = await editAppointment(this.selectedAppointment);
+      return response;
     },
 
     // Destructure appointment from extendedProp from FullCalendar click event and set it as active
@@ -477,24 +354,63 @@ export default {
       this.updateAppDateLoadRange();
     },
 
+    // Add / Edit Modal Helpers
+    // =====================================================================
+
+    // Fires our endpoint to get drivers list, and total count for loaded drivers
+    async loadDriverList() {
+      const data = await getDrivers();
+      this.driversList = JSON.parse(JSON.stringify(data.data.drivers)); // De-proxy
+      this.driversListCount = data.data.count;
+    },
+
+    // Fires our endpoint to get client list, and total count for loaded clients
+    async loadClientList() {
+      const data = await getClients();
+      this.clientsList = JSON.parse(JSON.stringify(data.data.clients)); // De-proxy
+      this.clientsListCount = data.data.count;
+    },
+
+    // Set addAppointment to be current Selected appointment, call update and reload
+    saveNewAppointment() {
+      this.selectedAppointment = this.addAppointment;
+      const response = this.updateAppointment(); // Leverages this.selectedAppointment
+
+      if (response.response.status > 400) {
+        // Output "You failed!" message
+      }
+
+      this.reloadAppointments(); // Force reload to pick up the change
+    },
+
     // Modal Controls
     // =====================================================================
 
-    showAddAppointmentModal(e) {
-      console.log(e);
+    // Loads necessary information and fires event to open modal
+    async showAddAppointmentModal(e) {
+      this.loadDriverList();
+      this.loadClientList();
+      this.toggleModal(); // References AddEditAppointment Modal
     },
 
-    hideModal() {},
+    // Closes modal --> Add any cleanup here
+    hideModal() {
+      this.toggleModal();
+    },
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .calendar-header-widget {
   text-align: left;
   padding-left: 1.3em;
   padding-top: 8px;
   padding-bottom: 1px;
+}
+
+.calendar-modal {
+  width: 35em;
 }
 
 .count-header {
