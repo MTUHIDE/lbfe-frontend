@@ -1,8 +1,8 @@
 <template>
   <div class="calendar-popup">
     <!-- Modal Header -->
-      <h5 class="modal-title">{{ title }}</h5>
-
+    <h5 class="modal-title">{{ modalTitle }}</h5>
+    
     <div class="popup-inner">
       <form id="editForm" @submit.prevent="editForm">
         <div class="mb-3">
@@ -12,47 +12,52 @@
             type="text"
             class="form-control"
             id="editTitle"
-            v-model="oldTitle"
+            :value="title"
+            v-on:change="$emit('update:title', $event.target.value)"
             required
           />
         </div>
 
+        <!-- Elder Select - Defaults to given clientId -->
         <div class="mb-3">
           <label for="editName" class="form-label">Elder: </label>
           <select
             id="editName"
             name="name"
             class="form-select"
-            v-model="oldElderId"
+            :value="clientId"
+            @change="$emit('update:clientId', $event.target.value)"
             required
           >
             <option disabled>--Select an Elder--</option>
             <option
-              v-for="addClientId in addClients"
-              :key="addClientId.id"
-              v-bind:value="addClientId.id"
+              v-for="elder in eldersList"
+              :key="elder.id"
+              v-bind:value="elder.clientId"
             >
-              {{ addClientId.client_name }}
+              {{ elder.fullName }}
             </option>
           </select>
         </div>
 
+        <!-- Driver Select - Defaults to given driverId -->
         <div class="mb-3">
           <label for="editDriver" class="form-label">Driver: </label>
           <select
             id="editDriver"
             name="driver"
             class="form-select"
-            v-model="oldDriverId"
+            :value="driverId"
+            @change="$emit('update:driverId', $event.target.value)"
             required
           >
             <option disabled>--Select a Driver--</option>
             <option
-              v-for="addDriverId in addDrivers"
-              :key="addDriverId.id"
-              v-bind:value="addDriverId.id"
+              v-for="driver in driversList"
+              :key="driver.driverId"
+              v-bind:value="driver.driverId"
             >
-              {{ addDriverId.driver_name }}
+              {{ driver.fullName }}
             </option>
           </select>
         </div>
@@ -66,7 +71,8 @@
             name="dateTime"
             class="form-control"
             type="datetime-local"
-            v-model="oldAppDate"
+            :value="startDate"
+            @change="$emit('update:startDate', $event.target.value)"
             required
           />
         </div>
@@ -79,29 +85,34 @@
             name="dateTime"
             class="form-control"
             type="datetime-local"
-            v-model="oldAppEndDate"
+            :value="endDate"
+            @change="$emit('update:endDate', $event.target.value)"
             required
           />
         </div>
 
         <div class="mb-3">
-          <label for="editPickup" class="form-label">Pick up address: </label>
+          <label for="editPickup" class="form-label">Pick up Address: </label>
           <textarea
             id="editPickup"
             name="pickup"
             class="form-control"
-            v-model="oldPickupAddress"
+            :value="pickupAddress"
+            @change="$emit('update:pickupAddress', $event.target.value)"
             required
           ></textarea>
         </div>
 
         <div class="mb-3">
-          <label for="editDropoff" class="form-label">Drop off address: </label>
+          <label for="editDropoff" class="form-label"
+            >Destination Address:
+          </label>
           <textarea
             id="editDropoff"
             name="dropoff"
             class="form-control"
-            v-model="oldDropoffAddress"
+            :value="destinationAddress"
+            @change="$emit('update:destinationAddress', $event.target.value)"
             required
           ></textarea>
         </div>
@@ -112,7 +123,8 @@
             id="editNotes"
             name="notes"
             class="form-control"
-            v-model="oldClientNotes"
+            :value="notes"
+            @change="$emit('update', $event.target.value)"
           ></textarea>
         </div>
       </form>
@@ -131,36 +143,24 @@
 </template>
 
 <script>
-/* eslint-disable */
 export default {
   props: {
-    title: String,
-    appointment: Object,
+    modalTitle: String,
     driversList: Object,
     eldersList: Object,
     callOnSave: Function,
     callOnClose: Function,
-  },
-  emits: ["update:appointment"],
 
-  data() {
-    return {
-      selectedAppointment: {},
-      selectedDriver: {},
-      selectedElder: {},
-    };
-  },
-
-  mounted() {
-    this.loadDefaults();
-  },
-
-  methods: {
-    // Set default driver / elder on page load if we can
-    loadDefaults() {
-      this.selectedDriver = !!this.driversList ? this.driversList[0] : {};
-      this.selectedElder = !!this.eldersList ? this.eldersList[0] : {};
-    },
+    // Manually define our object cause vue hates mutating objects bound to a parent
+    appointmentId: Number,
+    title: String,
+    clientId: Number,
+    driverId: Number,
+    startDate: String,
+    endDate: String,
+    pickupAddress: String,
+    destinationAddress: String,
+    notes: String,
   },
 };
 </script>
@@ -176,7 +176,6 @@ export default {
   float: left;
   left: 0;
   width: 100%;
-  background-color: yellow;
 }
 
 .popup-inner {

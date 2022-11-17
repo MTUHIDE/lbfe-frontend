@@ -9,22 +9,42 @@
         <!-- Modal Body -->
         <calendar-popup
           v-show="isAddingAppointment"
-          :title="`Add Appointment`" 
-          :appointment="addAppointment"
+          :modalTitle="`Add Appointment`"
           :driversList="driversList"
           :eldersList="clientsList"
-          :callOnSave="saveNewAppointment"
+          :callOnSave="saveAppointment"
           :callOnClose="hideModal"
-        /> 
-        <!-- <calendar-popup
-          v-show="!isAddingAppointment"
-          :title="'Edit Appointment'"
-          :appointment="selectedAppointment"
-          :driversList="{}"
-          :clientsList="{}"
-          :callOnSave="saveNewAppointment"
+
+          :appointmentId="cachedAppointment.appointmentId"
+          :title="cachedAppointment.title"
+          :clientId="cachedAppointment.clientId"
+          :driverId="cachedAppointment.driverId"
+          :startDate="cachedAppointment.startDate"
+          :endDate="cachedAppointment.endDate"
+          :pickupAddress="cachedAppointment.pickupAddress"
+          :destinationAddress="cachedAppointment.destinationAddress"
+          :notes="cachedAppointment.notes"
+        />
+
+
+        <calendar-popup
+          v-show="isEditingAppointment"
+          :modalTitle="`Edit Appointment`"
+          :driversList="driversList"
+          :eldersList="clientsList"
+          :callOnSave="saveAppointment"
           :callOnClose="hideModal"
-        />  -->
+
+          :appointmentId="cachedAppointment.appointmentId"
+          :title="cachedAppointment.title"
+          :clientId="cachedAppointment.clientId"
+          :driverId="cachedAppointment.driverId"
+          :startDate="cachedAppointment.startDate"
+          :endDate="cachedAppointment.endDate"
+          :pickupAddress="cachedAppointment.pickupAddress"
+          :destinationAddress="cachedAppointment.destinationAddress"
+          :notes="cachedAppointment.notes"
+        />
 
         <!-- End Modal Body -->
       </div>
@@ -46,9 +66,10 @@
 </template>
 
 <script>
-/* eslint-disable */
+
 import {
   getAppointments,
+  createAppointment,
   editAppointment,
   getDrivers,
   getClients,
@@ -59,20 +80,19 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ref } from "vue";
 import CalendarPopup from "./CalendarPopup.vue"; // TODO
-import DeleteModal from "./DeleteModal.vue"; // TODO
-import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
+// import DeleteModal from "./DeleteModal.vue"; // TODO
+// import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
 import ModalComponent from "../modals/ModalComponent.vue";
-import CalendarAdmin from "./CalendarAdmin.vue";
+
 
 export default {
   name: "CalendarComponent",
   components: {
     FullCalendar,
     CalendarPopup,
-    DeleteModal,
-    SuccessAlert,
+    // DeleteModal,
+    // SuccessAlert,
     ModalComponent,
-    CalendarAdmin,
   },
 
   setup() {
@@ -86,7 +106,6 @@ export default {
 
   data() {
     return {
-      selectedAppointment: null, // Current appointment object being looked at
       appointments: {}, // stores ALL loaded appointments. THIS IS NOT fullCalendar.calendarOptions.events!!! <-- that gets casted from this
       count: 0, // Total number of appointments loaded
       isLoading: false,
@@ -94,29 +113,27 @@ export default {
       lastLoadedCalView: "dayGridMonth", // Should be used to track current view for the user, so on reload they reset
 
       // Modal v-show binds
-      isAddingAppointment: false, // Toggles edit / create mode on modal
+      isAddingAppointment: false, // Toggles create mode on modal
+      isEditingAppointment: false, // Toggles edit mode on modal
 
       // Refs
       calendarApi: ref(null), // Pulls ref from full-calendar on mount
       showAddEditModal: ref(null), // loaded on
 
       // Object to pass a newly created appointment around, and also to save state with
-      addAppointment: {
-        addTitle: "",
-        addAppDate: "",
-        addAppEndDate: "",
-        addPickupAddress: "",
-        addDropoffAddress: "",
-        addClientNotes: "",
-        addDrivers: [],
-        addClients: [],
-        selectedDriver: {
-          addDriverId: "",
-        },
-        selectedClient: {
-          addClientId: "",
-        },
+      selectedApppointment: {
+        appointmentId: -1,
+        title: "Enter Title...",
+        clientId: 0,
+        driverId: 0,
+        startDate: "",
+        endDate: "",
+        pickupAddress: "",
+        destinationAddress: "",
+        notes: "",
       },
+
+      cachedAppointment: {}, // This is bound to the modal children
 
       // These get loaded on modal open request
       driversListCount: 0,
@@ -161,7 +178,7 @@ export default {
           // Overrides the FullCalendar today button
           today: {
             text: "Today",
-            click: (e) => {
+            click: () => {
               this.forceResetView();
             },
           },
@@ -187,7 +204,7 @@ export default {
           this.handleEventEdit(e);
         },
         eventClick: (e) => {
-          this.selectAppointment(e);
+          this.handleEventClick(e);
         },
 
         // Bound to stream with loadAppointments
@@ -227,7 +244,7 @@ export default {
     async loadAppointments(moveToThisDate) {
       // If it's our first time, remember it (Set to now)
       if (!this.lookAtDate) this.lookAtDate = new Date();
-      else if (!!moveToThisDate) this.lookAtDate = moveToThisDate;
+      else if (moveToThisDate) this.lookAtDate = moveToThisDate;
 
       let startDate = new Date(this.lookAtDate);
       let endDate = new Date(this.lookAtDate);
@@ -269,7 +286,7 @@ export default {
       let isMonth = false; // bool to fire update date, or update by month
 
       // If we got here without loading the calendar, abort to loading appointments
-      if (!!this.lookAtDate) {
+      if (this.lookAtDate) {
         // Be smart about adjusting our look ahead
         switch (this.calendarApi.view.type) {
           case "dayGridMonth":
@@ -284,11 +301,11 @@ export default {
 
         // 'lookAtDate' is global --> loadAppointments will pick it up
         if (isMonth) {
-          !!loadAhead
+          loadAhead
             ? this.lookAtDate.setMonth(this.lookAtDate.getMonth() + adjustBy)
             : this.lookAtDate.setMonth(this.lookAtDate.getMonth() - adjustBy);
         } else {
-          !!loadAhead
+          loadAhead
             ? this.lookAtDate.setDate(this.lookAtDate.getDate() + adjustBy)
             : this.lookAtDate.setDate(this.lookAtDate.getDate() - adjustBy);
         }
@@ -298,9 +315,15 @@ export default {
       this.reloadAppointments();
     },
 
+    // Calls our create appointment script with the current selectedApppointment
+    async createNewAppointment() {
+      const response = await createAppointment(this.selectedApppointment);
+      return response;
+    },
+
     // Calls edit appointment route on the given appointment
     async updateAppointment() {
-      const response = await editAppointment(this.selectedAppointment);
+      const response = await editAppointment(this.selectedApppointment);
       return response;
     },
 
@@ -308,20 +331,29 @@ export default {
     selectAppointment(e) {
       const newAppointmnet = e.event._def.extendedProps;
       if (
-        !this.selectedAppointment ||
-        this.selectedAppointment.appointmentId != newAppointmnet.appointmentId
+        !this.selectedApppointment.appointmentId ||
+        this.selectedApppointment.appointmentId != newAppointmnet.appointmentId
       ) {
         // Proxy's are funky, but prevent type smashing, so just gotta deal sometimes
-        this.selectedAppointment = JSON.parse(JSON.stringify(newAppointmnet)); // De-proxy
+        this.selectedApppointment = JSON.parse(JSON.stringify(newAppointmnet)); // De-proxy
       }
+      console.log("Selecting: ", this.selectedApppointment);
     },
 
     // Called whenever a user clicks and drags an event in any way
     handleEventEdit(e) {
       this.selectAppointment(e); // will grab the appointment from extendedProps for us
-      this.selectedAppointment.startDate = new Date(e.event.start);
-      this.selectedAppointment.endDate = new Date(e.event.end);
-      this.updateAppointment(); // Leverages 'this.selectedAppointment'
+      this.selectedApppointment.startDate = new Date(e.event.start);
+      this.selectedApppointment.endDate = new Date(e.event.end);
+      this.updateAppointment(); // Leverages 'this.selectedApppointment'
+    },
+
+    // Called whenever a user clicks into an event
+    handleEventClick(e) {
+      this.selectAppointment(e);
+      this.isAddingAppointment = false;
+      this.isEditingAppointment = true;
+      this.showAddAppointmentModal(e);
     },
 
     // If a user selects a date, move to that date
@@ -372,24 +404,28 @@ export default {
     },
 
     // Set addAppointment to be current Selected appointment, call update and reload
-    saveNewAppointment() {
-      this.selectedAppointment = this.addAppointment;
-      const response = this.updateAppointment(); // Leverages this.selectedAppointment
+    saveAppointment() {
+      // the create / update functions leverage this.selectedApppointment
+      const response = !this.selectedApppointment.id
+        ? this.createNewAppointment() // If appointment has no id attached, assume we're creating a new one
+        : this.updateAppointment(); // else, update it
 
       if (response.response.status > 400) {
         // Output "You failed!" message
       }
 
       this.reloadAppointments(); // Force reload to pick up the change
+      this.hideModal();
     },
 
     // Modal Controls
     // =====================================================================
 
     // Loads necessary information and fires event to open modal
-    async showAddAppointmentModal(e) {
+    async showAddAppointmentModal() {
       this.loadDriverList();
       this.loadClientList();
+      this.cachedAppointment = this.selectedApppointment
       this.toggleModal(); // References AddEditAppointment Modal
     },
 
