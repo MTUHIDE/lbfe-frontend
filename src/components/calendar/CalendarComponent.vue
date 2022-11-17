@@ -14,7 +14,7 @@
             Add Appointment
           </h5>
           <h5 v-show="isEditingAppointment" class="modal-title">
-            Add Appointment
+            Edit Appointment
           </h5>
 
           <!-- Modal Body -->
@@ -155,6 +155,13 @@
             >
               Save
             </button>
+            <button
+              v-show="!isAddingAppointment"
+              @click="deleteAppointment"
+              class="btn btn-danger custom-del-btn"
+            >
+              Delete
+            </button>
           </div>
         </div>
 
@@ -184,6 +191,7 @@ import {
   getAppointments,
   createAppointment,
   editAppointment,
+  deleteAppointment,
   getDrivers,
   getClients,
 } from "../../network/endpoints";
@@ -266,9 +274,11 @@ export default {
           addAppointmentButton: {
             text: "+ Create",
             hint: "Create appointment",
-            click: (e) => {
-              this.isAddingAppointment = true; // This is only place we can create an appointment right now
-              this.showAddAppointmentModal(e);
+            click: () => {
+              this.isAddingAppointment = true;
+              this.isEditingAppointment = false; // This is only place we can create an appointment right now
+              this.clearAppointmentCache();
+              this.showAddAppointmentModal();
             },
           },
           // Overrides the FullCalendar prev button
@@ -331,6 +341,7 @@ export default {
     this.reloadAppointments(); // Call calendar reload
     this.loadDriverList(); // These have to get poplated to remove the warnings
     this.loadClientList();
+    this.clearAppointmentCache();
   },
 
   methods: {
@@ -532,7 +543,7 @@ export default {
         ? await this.createNewAppointment() // If appointment has no id attached, assume we're creating a new one
         : await this.updateAppointment(); // else, update it
 
-      if (!response || response.status > 400) {
+      if (!response || response.status >= 400) {
         return;
       }
 
@@ -541,13 +552,39 @@ export default {
       this.hideModal();
     },
 
+    async deleteAppointment() {
+      // Toggle "You sure?"
+      const response = await deleteAppointment(this.selectedApppointment);
+      if (response.status >= 400) {
+        // Die with warning
+        return;
+      }
+      this.hideModal();
+      this.clearAppointmentCache();
+      this.reloadAppointments();
+    },
+
     // Modal Controls
     // =====================================================================
+
+    clearAppointmentCache() {
+      this.selectedApppointment = {
+        title: "",
+        clientId: 0,
+        driverId: 0,
+        startDate: "",
+        endDate: "",
+        pickupAddress: "",
+        destinationAddress: "",
+        notes: "",
+      };
+    },
 
     // Loads necessary information and fires event to open modal
     async showAddAppointmentModal() {
       this.loadDriverList();
       this.loadClientList();
+
       this.cachedAppointment = this.selectedApppointment;
       this.toggleModal(); // References AddEditAppointment Modal
     },
@@ -617,9 +654,12 @@ export default {
 }
 
 .button-row {
-  background-color: green;
   justify-content: space-between;
 
+  .custom-del-btn {
+    float: right;
+    margin-right: 4px;
+  }
   .custom-save-btn {
     float: right;
   }

@@ -44,9 +44,9 @@ export async function editAppointment(appointment) {
     return await axios.post(requestUrl, appointment) // Pass appointment object
 }
 
-export async function deleteAppointment(id) {
+export async function deleteAppointment(appointment) {
     const requestUrl = appointmentUrl + deleteDelete
-    return await axios.delete(requestUrl, id) // Pass id in body
+    return await axios.post(requestUrl, appointment) // Pass id in body
 }
 
 
@@ -78,9 +78,9 @@ export async function editDriver(driver) {
     return await axios.post(requestUrl, driver) // Pass driver object
 }
 
-export async function deleteDriver(id) {
+export async function deleteDriver(driver) {
     const requestUrl = driverUrl + deleteDelete
-    return await axios.delete(requestUrl, id) // Pass id in body
+    return await axios.post(requestUrl, driver) // Pass driver in body
 }
 
 
@@ -112,7 +112,7 @@ export async function editElder(elder) {
     return await axios.post(requestUrl, elder) // Pass elder object
 }
 
-export async function deleteElder(id) {
+export async function deleteElder(elder) {
     const requestUrl = clientUrl + deleteDelete
-    return await axios.delete(requestUrl, id) // Pass id in body
+    return await axios.post(requestUrl, elder) // Pass id in body
 }
