@@ -4,51 +4,165 @@
       <h1><i class="icon fas fa-calendar-alt" /> Calendar</h1>
     </div>
 
+    <!-- Begin Modal -->
+
     <modal-component @close="toggleModal" :modalActive="modalActive">
       <div class="modal-inner calendar-modal">
-        <!-- Modal Body -->
-        <calendar-popup
-          v-show="isAddingAppointment"
-          :modalTitle="`Add Appointment`"
-          :driversList="driversList"
-          :eldersList="clientsList"
-          :callOnSave="saveAppointment"
-          :callOnClose="hideModal"
+        <div class="calendar-popup">
+          <!-- Modal Header -->
+          <h5 v-show="isAddingAppointment" class="modal-title">
+            Add Appointment
+          </h5>
+          <h5 v-show="isEditingAppointment" class="modal-title">
+            Add Appointment
+          </h5>
 
-          :appointmentId="cachedAppointment.appointmentId"
-          :title="cachedAppointment.title"
-          :clientId="cachedAppointment.clientId"
-          :driverId="cachedAppointment.driverId"
-          :startDate="cachedAppointment.startDate"
-          :endDate="cachedAppointment.endDate"
-          :pickupAddress="cachedAppointment.pickupAddress"
-          :destinationAddress="cachedAppointment.destinationAddress"
-          :notes="cachedAppointment.notes"
-        />
+          <!-- Modal Body -->
+          <div class="popup-inner">
+            <form id="editForm" @submit.prevent="editForm">
+              <div class="mb-3">
+                <label for="editTitle" class="form-label">Title: </label>
+                <input
+                  name="title"
+                  type="text"
+                  class="form-control"
+                  id="editTitle"
+                  v-model="cachedAppointment.title"
+                  required
+                />
+              </div>
 
+              <!-- Elder Select - Defaults to given clientId -->
+              <div class="mb-3">
+                <label for="editName" class="form-label">Elder: </label>
+                <select
+                  id="editName"
+                  name="name"
+                  class="form-select"
+                  v-model="cachedAppointment.clientId"
+                  required
+                >
+                  <option disabled>--Select an Elder--</option>
+                  <option
+                    v-for="elder in clientsList"
+                    :key="elder.id"
+                    v-bind:value="elder.clientId"
+                  >
+                    {{ elder.fullName }}
+                  </option>
+                </select>
+              </div>
 
-        <calendar-popup
-          v-show="isEditingAppointment"
-          :modalTitle="`Edit Appointment`"
-          :driversList="driversList"
-          :eldersList="clientsList"
-          :callOnSave="saveAppointment"
-          :callOnClose="hideModal"
+              <!-- Driver Select - Defaults to given driverId -->
+              <div class="mb-3">
+                <label for="editDriver" class="form-label">Driver: </label>
+                <select
+                  id="editDriver"
+                  name="driver"
+                  class="form-select"
+                  v-model="cachedAppointment.driverId"
+                  required
+                >
+                  <option disabled>--Select a Driver--</option>
+                  <option
+                    v-for="driver in driversList"
+                    :key="driver.driverId"
+                    v-bind:value="driver.driverId"
+                  >
+                    {{ driver.fullName }}
+                  </option>
+                </select>
+              </div>
 
-          :appointmentId="cachedAppointment.appointmentId"
-          :title="cachedAppointment.title"
-          :clientId="cachedAppointment.clientId"
-          :driverId="cachedAppointment.driverId"
-          :startDate="cachedAppointment.startDate"
-          :endDate="cachedAppointment.endDate"
-          :pickupAddress="cachedAppointment.pickupAddress"
-          :destinationAddress="cachedAppointment.destinationAddress"
-          :notes="cachedAppointment.notes"
-        />
+              <div class="mb-3">
+                <label for="editDateTime" class="form-label"
+                  >Start Date and Time:
+                </label>
+                <input
+                  id="editDateTime"
+                  name="dateTime"
+                  class="form-control"
+                  type="datetime-local"
+                  v-model="cachedAppointment.startDate"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editEndDateTime" class="form-label"
+                  >End Date and Time:
+                </label>
+                <input
+                  id="editEndDateTime"
+                  name="dateTime"
+                  class="form-control"
+                  type="datetime-local"
+                  v-model="cachedAppointment.endDate"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editPickup" class="form-label"
+                  >Pick up Address:
+                </label>
+                <textarea
+                  id="editPickup"
+                  name="pickup"
+                  class="form-control"
+                  v-model="cachedAppointment.pickupAddress"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="editDropoff" class="form-label"
+                  >Destination Address:
+                </label>
+                <textarea
+                  id="editDropoff"
+                  name="dropoff"
+                  class="form-control"
+                  v-model="cachedAppointment.destinationAddress"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="editNotes" class="form-label"
+                  >Appointment Notes:
+                </label>
+                <textarea
+                  id="editNotes"
+                  name="notes"
+                  class="form-control"
+                  v-model="cachedAppointment.notes"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+
+          <!-- Close / Save Appointment Modal -->
+          <div class="button-row">
+            <button
+              @click="hideModal"
+              class="btn btn-secondary custom-close-btn"
+            >
+              Close
+            </button>
+            <button
+              @click="saveAppointment"
+              class="btn btn-primary custom-save-btn"
+            >
+              Save
+            </button>
+          </div>
+        </div>
 
         <!-- End Modal Body -->
       </div>
     </modal-component>
+
+    <!-- End Modal -->
 
     <div class="widget-wrapper full-calendar-widget">
       <!-- What to show while loading -->
@@ -66,7 +180,6 @@
 </template>
 
 <script>
-
 import {
   getAppointments,
   createAppointment,
@@ -79,19 +192,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { ref } from "vue";
-import CalendarPopup from "./CalendarPopup.vue"; // TODO
 // import DeleteModal from "./DeleteModal.vue"; // TODO
 // import SuccessAlert from "../busforms/SuccessAlert.vue"; // TODO
 import ModalComponent from "../modals/ModalComponent.vue";
-
 
 export default {
   name: "CalendarComponent",
   components: {
     FullCalendar,
-    CalendarPopup,
-    // DeleteModal,
-    // SuccessAlert,
     ModalComponent,
   },
 
@@ -246,18 +354,32 @@ export default {
       if (!this.lookAtDate) this.lookAtDate = new Date();
       else if (moveToThisDate) this.lookAtDate = moveToThisDate;
 
-      let startDate = new Date(this.lookAtDate);
-      let endDate = new Date(this.lookAtDate);
+      let startDate, endDate, data;
 
-      // Adjust by +- 30 days
-      startDate.setDate(startDate.getDate() - 30);
-      endDate.setDate(endDate.getDate() + 30);
+      // Load what we can see
+      if (this.calendarApi) {
+        startDate = this.calendarApi.currentData.dateProfile.activeRange.start;
+        endDate = this.calendarApi.currentData.dateProfile.activeRange.end;
 
-      // Calls our endpoint to retrive appointments given a date range
-      const data = await getAppointments(
-        startDate.toISOString(), // Pass our startDate + endDate
-        endDate.toISOString()
-      );
+        data = await getAppointments(
+          startDate.toISOString(), // Pass our startDate + endDate
+          endDate.toISOString()
+        );
+        // If we get here without a fullCalendar Reference, use lookAtDate
+      } else {
+        let startDate = new Date(this.lookAtDate);
+        let endDate = new Date(this.lookAtDate);
+
+        // Adjust by +- 30 days
+        startDate.setDate(startDate.getDate() - 30);
+        endDate.setDate(endDate.getDate() + 30);
+
+        // Calls our endpoint to retrive appointments given a date range
+        data = await getAppointments(
+          startDate.toISOString(), // Pass our startDate + endDate
+          endDate.toISOString()
+        );
+      }
 
       // Destructure and rename our appointment event to match FullCalendar's event object format
       this.calendarOptions.events = data.appointments.map((event) => {
@@ -337,7 +459,6 @@ export default {
         // Proxy's are funky, but prevent type smashing, so just gotta deal sometimes
         this.selectedApppointment = JSON.parse(JSON.stringify(newAppointmnet)); // De-proxy
       }
-      console.log("Selecting: ", this.selectedApppointment);
     },
 
     // Called whenever a user clicks and drags an event in any way
@@ -404,17 +525,19 @@ export default {
     },
 
     // Set addAppointment to be current Selected appointment, call update and reload
-    saveAppointment() {
-      // the create / update functions leverage this.selectedApppointment
-      const response = !this.selectedApppointment.id
-        ? this.createNewAppointment() // If appointment has no id attached, assume we're creating a new one
-        : this.updateAppointment(); // else, update it
+    async saveAppointment() {
+      this.selectedApppointment = this.cachedAppointment;
 
-      if (response.response.status > 400) {
-        // Output "You failed!" message
+      const response = !this.selectedApppointment.appointmentId
+        ? await this.createNewAppointment() // If appointment has no id attached, assume we're creating a new one
+        : await this.updateAppointment(); // else, update it
+
+      if (!response || response.status > 400) {
+        return;
       }
 
-      this.reloadAppointments(); // Force reload to pick up the change
+      // Force reload to pick up the change
+      this.reloadAppointments();
       this.hideModal();
     },
 
@@ -425,7 +548,7 @@ export default {
     async showAddAppointmentModal() {
       this.loadDriverList();
       this.loadClientList();
-      this.cachedAppointment = this.selectedApppointment
+      this.cachedAppointment = this.selectedApppointment;
       this.toggleModal(); // References AddEditAppointment Modal
     },
 
@@ -472,5 +595,36 @@ export default {
 
 .fc-icon-fa {
   font-family: FontAwesome;
+}
+
+.add-edit-appointment-header {
+  border-bottom: 2px;
+  border-bottom-color: grey;
+  width: 23.37em;
+}
+
+.modal-title {
+  float: left;
+  left: 0;
+  width: 100%;
+}
+
+.popup-inner {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-width: 30%;
+  min-height: 30%;
+}
+
+.button-row {
+  background-color: green;
+  justify-content: space-between;
+
+  .custom-save-btn {
+    float: right;
+  }
+  .custom-close-btn {
+    float: left;
+  }
 }
 </style>
