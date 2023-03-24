@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 // TODO: format the form so it looks nicer, both when editing and when saved
 // TODO: fix date/time formatting when not editing
 // TODO: for some reason the scrollbar keeps disappearing and reappearing, which causes the page to jump back and forth when typing, pressing buttons and selecting different options in select. This is obnoxious

@@ -1,8 +1,48 @@
 <template>
   <div>
     <div class="widget-wrapper calendar-header-widget">
-      <h1><i class="icon fas fa-calendar-alt" /> Calendar</h1>
+      <h1><i class="icon fas fa-calendar-alt" /> Appointments</h1>
     </div>
+
+    <!-- below is what I added, as well as causing calendar-
+    modal to float right, and created style for sidebar to
+    float left
+    <div class = "sidebar">
+      <div class = "search">
+        <input
+          name="query"
+          type="text"
+          class="form-control"
+          id="search"
+          placeholder = "Search"
+        />
+      </div>
+
+      <div class = "search" >
+        <select class="form-select" v-model="filter" :options="filterOptions" id="filter">
+          <option selected>Example Option</option>
+        </select>
+      </div>
+
+      <div class = "search">
+        <textarea
+          id="currFilters"
+          name="currFilters"
+          class="form-control"
+          placeholder = "Current Filters"
+        ></textarea>
+      </div>
+      
+      <div class = "search">
+        <textarea
+          id="recentAppt"
+          name="recentAppt"
+          class="form-control"
+          placeholder = "Recently Updated Appointments"
+        ></textarea>
+      </div>
+    </div>
+    -->
 
     <!-- Begin Modal -->
 
@@ -17,9 +57,11 @@
             Edit Appointment
           </h5>
 
-          <!-- Modal Body -->
           <div class="popup-inner">
             <form id="editForm" @submit.prevent="editForm">
+
+              <div class = "left-side">
+
               <div class="mb-3">
                 <label for="editTitle" class="form-label">Title: </label>
                 <input
@@ -32,54 +74,12 @@
                 />
               </div>
 
-              <!-- Elder Select - Defaults to given clientId -->
-              <div class="mb-3">
-                <label for="editName" class="form-label">Elder: </label>
-                <select
-                  id="editName"
-                  name="name"
-                  class="form-select"
-                  v-model="cachedAppointment.clientId"
-                  required
-                >
-                  <option disabled>--Select an Elder--</option>
-                  <option
-                    v-for="elder in clientsList"
-                    :key="elder.id"
-                    v-bind:value="elder.clientId"
-                  >
-                    {{ elder.fullName }}
-                  </option>
-                </select>
-              </div>
-
-              <!-- Driver Select - Defaults to given driverId -->
-              <div class="mb-3">
-                <label for="editDriver" class="form-label">Driver: </label>
-                <select
-                  id="editDriver"
-                  name="driver"
-                  class="form-select"
-                  v-model="cachedAppointment.driverId"
-                  required
-                >
-                  <option disabled>--Select a Driver--</option>
-                  <option
-                    v-for="driver in driversList"
-                    :key="driver.driverId"
-                    v-bind:value="driver.driverId"
-                  >
-                    {{ driver.fullName }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="editDateTime" class="form-label"
-                  >Start Date and Time:
+              <div class="edit-pickup-time">
+                <label for="editPickupDateTime" class="form-label"
+                  >Pickup Date and Time:
                 </label>
                 <input
-                  id="editDateTime"
+                  id="editPickupDateTime"
                   name="dateTime"
                   class="form-control"
                   type="datetime-local"
@@ -87,7 +87,8 @@
                   required
                 />
               </div>
-              <div class="mb-3">
+
+              <div class="edit-end-time">
                 <label for="editEndDateTime" class="form-label"
                   >End Date and Time:
                 </label>
@@ -128,19 +129,120 @@
               </div>
 
               <div class="mb-3">
-                <label for="editNotes" class="form-label"
-                  >Appointment Notes:
+                <label for="editMobility" class="form-label"
+                  >Mobility Notes: 
                 </label>
                 <textarea
-                  id="editNotes"
-                  name="notes"
+                  id="editMobility"
+                  name="mobility"
                   class="form-control"
-                  v-model="cachedAppointment.notes"
+                  v-model="cachedAppointment.mobility"
+                  placeholder = "Will autofill once elder is selected"
+                  required
                 ></textarea>
+              </div>
+              </div>   
+              
+              
+              <div class = "right-side">
+                                 
+              <div class="edit-elder-phone">
+                <label for="editElderPhone" class="form-label"
+                  >Elder Phone Number: 
+                </label>
+                <textarea
+                  id="editElderPhone"
+                  name="elderPhone"
+                  class="form-control"
+                  v-model="cachedAppointment.elderPhone"
+                  placeholder = "Will autofill once elder is selected"
+                  required
+                ></textarea>
+              </div>
+
+              <!-- Elder Select - Defaults to given clientId -->
+              <div class="edit-elder-name">
+                <label for="editName" class="form-label">Elder: </label>
+                <select
+                  id="editName"
+                  name="name"
+                  class="form-select"
+                  v-model="cachedAppointment.clientId"
+                  required
+                >
+                  <option disabled>--Select an Elder--</option>
+                  <option
+                    v-for="elder in clientsList"
+                    :key="elder.id"
+                    v-bind:value="elder.clientId"
+                  >
+                    {{ elder.fullName }}
+                    elderPhone = elder.phoneNumber
+                  </option>
+                </select>
+              </div>
+
+              <!-- Driver Select - Defaults to given driverId -->
+              <div class="edit-driver-name">
+                <label for="editDriver" class="form-label">Driver: </label>
+                <select
+                  id="editDriver"
+                  name="driver"
+                  class="form-select"
+                  v-model="cachedAppointment.driverId"
+                  required
+                >
+                  <option disabled>--Select a Driver--</option>
+                  <option
+                    v-for="driver in driversList"
+                    :key="driver.driverId"
+                    v-bind:value="driver.driverId"
+                  >
+                    {{ driver.fullName }}
+                  </option>
+                </select>
+              </div>              
+
+              <div class="edit-driver-phone">
+                <label for="editDriverPhone" class="form-label"
+                  >Driver Phone Number: 
+                </label>
+                <textarea
+                  id="editDriverPhone"
+                  name="driverPhone"
+                  class="form-control"
+                  placeholder = "Will autofill once driver is selected"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="edit-vehicle">
+                <label for="editNeedsVehicle" class="form-label">Needs LBFE Vehicle: </label>
+                <input type="checkbox" v-model="cachedAppointment.needsLBFEVehicle" :options="vehicleOptions" id="vehicle">
+              </div>                 
+
+              <div class="edit-baraga">
+                <label for="editBaraga" class="form-label">Baraga/Marquette: </label>
+                <input type="checkbox" v-model="cachedAppointment.baraga" :options="baragaOptions" id="baraga">
+              </div>           
+
+              <div class="edit-confirmed">
+                <label for="editConfirmed" class="form-label">Confirmed By Driver: </label>
+                <input type="checkbox" v-model="cachedAppointment.confirmed" :options="confirmedOptions" id="confirmed">
+              </div>
+
+              <div class="edit-status">
+                <label for="editStatusBar" class="form-label">Status: </label>
+                <select class="form-select" v-model="cachedAppointment.statusBar" :options="statusBar" id="status">
+                  <option selected>On the way</option>
+                  <option selected>Picked Up</option>
+                  <option selected>Dropped Off</option>
+                </select>
+              </div>
+
               </div>
             </form>
           </div>
-
           <!-- Close / Save Appointment Modal -->
           <div class="button-row">
             <button
@@ -246,7 +348,11 @@ export default {
         endDate: "",
         pickupAddress: "",
         destinationAddress: "",
-        notes: "",
+        statusBar: "",
+        mobility: "",
+        needsLBFEVehicle: false,
+        baraga: false,
+        confirmed: false,
       },
 
       cachedAppointment: {}, // This is bound to the modal children
@@ -347,7 +453,7 @@ export default {
   methods: {
     // Full Calendar Helper Functions
     // =====================================================================
-
+    
     // Resets appointments to current appointmentEvents
     reloadAppointments() {
       this.isLoading = true;
@@ -576,7 +682,11 @@ export default {
         endDate: "",
         pickupAddress: "",
         destinationAddress: "",
-        notes: "",
+        statusBar: "",
+        mobility: "",
+        needsLBFEVehicle: false,
+        baraga: false,
+        confirmed: false,
       };
     },
 
@@ -598,15 +708,102 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.mb-3 {
+  width: 98%;
+}
+
+.left-side {
+  float: left;
+  width: 48%;
+}
+
+.right-side {
+  float: right;
+  width: 48%;
+}
+
+.edit-status {
+  float: left;
+  padding-top: 45px;
+  width: 98%;
+}
+.edit-vehicle {
+  float: left;
+  padding-top: 80px;
+  width: 13em;
+}
+.edit-baraga {
+  float: right; 
+  padding-top: 55px;
+  margin-right: 23px;
+  width: 13em;
+}
+
+.edit-confirmed {
+  float: left; 
+  padding-top: 20px;
+  margin-right: 200px;
+  width: 13em;
+}
+
+.edit-driver-name {
+  float: left;
+  padding-top: 29px;
+  width: 15em;
+}
+
+.edit-driver-phone {
+  float: right;
+  padding-left: 10px;
+  padding-top: 5px;
+  width: 15em;
+}
+
+.edit-elder-name {
+  float: left;
+  width: 15em;
+}
+
+.edit-elder-phone {
+  float: right;
+  padding-left: 10px;
+  width: 15em;
+}
+
+.edit-pickup-time {
+  float: left;
+  width: 15em;
+}
+
+.edit-end-time {
+  float: left;
+  padding-left: 10px;
+  width: 15em;
+}
+
 .calendar-header-widget {
-  text-align: left;
+  text-align: left; //center
   padding-left: 1.3em;
   padding-top: 8px;
   padding-bottom: 1px;
 }
 
 .calendar-modal {
-  width: 35em;
+  //float: right;
+  width: 65em; //25em
+}
+
+.sidebar {
+  float: left;
+  width: 15em;
+  background-color: #a9a9a9;
+  border-radius: 0.5em;
+  min-height: 66.4em; //may need to not hardcode this in later
+}
+
+.search {
+  padding: .5em;
+  padding-top: 1em;
 }
 
 .count-header {
@@ -616,11 +813,12 @@ export default {
 
 .full-calendar-widget {
   padding: 2em;
+  //padding-left: 15em; //hardcoded in to give sidebar space
 }
 
 .widget-wrapper {
   background-color: #ffffff;
-  border-radius: 1.3em;
+  border-radius:.5em;
   box-shadow: 2px 3px 10px #ad9b9b;
   margin: 1em;
 }
@@ -637,7 +835,7 @@ export default {
 .add-edit-appointment-header {
   border-bottom: 2px;
   border-bottom-color: grey;
-  width: 23.37em;
+  width: 35em;
 }
 
 .modal-title {
@@ -647,7 +845,7 @@ export default {
 }
 
 .popup-inner {
-  margin-top: 10px;
+  margin-top: 30px;
   margin-bottom: 10px;
   min-width: 30%;
   min-height: 30%;
@@ -655,6 +853,8 @@ export default {
 
 .button-row {
   justify-content: space-between;
+  float: left;
+  width: 98%;
 
   .custom-del-btn {
     float: right;

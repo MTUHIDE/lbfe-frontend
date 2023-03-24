@@ -26,7 +26,7 @@ export default {
 }
 
 .appWrap {
-  width: 75%;
+  width: 100%;
   margin: auto;
 }
 </style>
