@@ -65,7 +65,8 @@ export default {
     border: hidden;
     border-color: #fff;
     position: relative;
-    max-width: 640px;
+    max-width: 1280px;
+    width: 66em; //this is the width of the white box
     background-color: #fff;
     padding: 8px 8px;
   }
