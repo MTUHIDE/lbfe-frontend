@@ -13,7 +13,7 @@ const deleteDelete = '/delete'  // attach a body (only needs an id)
 
 
 // ********* APPOINTMENTS ********* 
-const appointmentUrl = baseUrl + '/appointment'
+const appointmentUrl = baseUrl + '/appointments' //CHANGED THIS SO NOW ENDPOINTS WORK - DONT GET RID OF IT
 
 // Call the getAllAppointments route in our backend
 // TODO - **Find a better way**
@@ -86,7 +86,7 @@ export async function deleteDriver(driver) {
 
 
 // ********* ELDERS *************** 
-const clientUrl = baseUrl + '/clients'
+const clientUrl = baseUrl + '/elders' //changed from clients to elders
 
 // Call the getAlElders route in our backend
 export async function getClients() {
