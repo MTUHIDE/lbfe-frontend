@@ -177,7 +177,7 @@
 import { defineComponent, reactive } from "vue";
 import TableLite from "./elderTable/TableLite.vue";
 import Test from "./elderTable/Test.vue";
-import ModalComponent from "../modals/ModalComponent.vue";
+import ModalComponent from "./elderTable/ModalComponent.vue";
 import { ref } from "vue";
 import {
   getClients,

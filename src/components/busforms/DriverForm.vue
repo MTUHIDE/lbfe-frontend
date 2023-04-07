@@ -153,7 +153,7 @@
 import { defineComponent, reactive } from "vue";
 import TableLite from "./driverTable/TableLite.vue";
 import Test from "./driverTable/Test.vue";
-import ModalComponent from "../modals/ModalComponent.vue";
+import ModalComponent from "./driverTable/ModalComponent.vue";
 import { ref } from "vue";
 import {
   getDrivers,
