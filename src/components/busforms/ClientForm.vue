@@ -154,7 +154,7 @@
               + Create
             </button>
           </div>
-
+<div class="table">
   <table-lite
     :is-slot-mode="true"
     :is-loading="table.isLoading"
@@ -171,6 +171,7 @@
       </Test>
     </template>
   </table-lite>
+</div>
 </template>
 
 <script>
@@ -470,6 +471,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.table{
+  padding-top: 60px;
+}
 .edit-bottom {
   padding-top: 5px;
 }
@@ -493,8 +497,8 @@ export default defineComponent({
 }
 .headerToolbar {
   margin-top: 20px;
-  margin-right: 87em;
-  padding-bottom: 20px;
+  float: left;
+  padding-left: 10px;
 }
 
 .calendar-header-widget {
