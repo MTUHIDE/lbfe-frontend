@@ -3,63 +3,63 @@
   "author": "HIDE - LBFE Team",
   "version": "1.0.0",
   "engines": {
-      "node": "^18.8.0"
+    "node": "^18.8.0"
   },
   "description": "frontend",
   "private": true,
   "scripts": {
-      "serve": "vue-cli-service serve",
-      "build": "vue-cli-service build",
-      "lint": "vue-cli-service lint"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-      "@azure/core-http": "1.1.8",
-      "@azure/msal-browser": "^2.21.0",
-      "@azure/storage-blob": "^12.2.1",
-      "@babel/polyfill": "^7.11.5",
-      "@fortawesome/fontawesome-free": "^5.15.4",
-      "@fullcalendar/core": "^5.10.1",
-      "@fullcalendar/daygrid": "^5.10.1",
-      "@fullcalendar/interaction": "^5.10.1",
-      "@fullcalendar/timegrid": "^5.10.1",
-      "@fullcalendar/vue3": "^5.10.1",
-      "axios": "^0.27.2",
-      "core-js": "^3.6.5",
-      "msal": "^1.4.16",
-      "moment": "^2.29.1",
-      "mutationobserver-shim": "^0.3.7",
-      "popper.js": "^1.16.1",
-      "register-service-worker": "^1.7.1",
-      "tiny-emitter": "^2.1.0",
-      "vue": "^3.2.29",
-      "vue-axios": "^3.4.1",
-      "vue-loader": "^17.0.0",
-      "vue-msal": "^3.2.0",
-      "vue-router": "^4.0.12",
-      "vue-template-compiler": "^2.6.12",
-      "vuex": "^4.0.0-beta.4"
+    "@azure/core-http": "^3.0.3",
+    "@azure/msal-browser": "^2.21.0",
+    "@azure/storage-blob": "^12.2.1",
+    "@babel/polyfill": "^7.11.5",
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fullcalendar/core": "^5.10.1",
+    "@fullcalendar/daygrid": "^5.10.1",
+    "@fullcalendar/interaction": "^5.10.1",
+    "@fullcalendar/timegrid": "^5.10.1",
+    "@fullcalendar/vue3": "^5.10.1",
+    "axios": "^0.27.2",
+    "core-js": "^3.6.5",
+    "moment": "^2.29.1",
+    "msal": "^1.4.16",
+    "mutationobserver-shim": "^0.3.7",
+    "popper.js": "^1.16.1",
+    "register-service-worker": "^1.7.1",
+    "tiny-emitter": "^2.1.0",
+    "vue": "^3.2.29",
+    "vue-axios": "^3.4.1",
+    "vue-loader": "^17.0.0",
+    "vue-msal": "^3.2.0",
+    "vue-router": "^4.0.12",
+    "vue-template-compiler": "^2.6.12",
+    "vuex": "^4.0.0-beta.4"
   },
   "devDependencies": {
-      "@popperjs/core": "^2.11.2",
-      "@vue/cli-plugin-babel": "~5.0.0",
-      "@vue/cli-service": "~5.0.0",
-      "bootstrap": "^5.1.3",
-      "lodash": "^4.17.19",
-      "postcss": "^8.4.6",
-      "resolve-url-loader": "^5.0.0",
-      "sass": "^1.43.3",
-      "sass-loader": "^11.0.1"
+    "@popperjs/core": "^2.11.2",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "bootstrap": "^5.1.3",
+    "lodash": "^4.17.19",
+    "postcss": "^8.4.6",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.43.3",
+    "sass-loader": "^11.0.1"
   },
   "eslintConfig": {
-      "root": true,
-      "env": {
-          "node": true
-      },
-      "extends": [
-          "plugin:vue/vue3-essential",
-          "eslint:recommended"
-      ],
-      "parser": "vue-eslint-parser",
-      "rules": {}
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parser": "vue-eslint-parser",
+    "rules": {}
   }
 }
