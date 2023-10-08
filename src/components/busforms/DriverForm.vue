@@ -20,14 +20,14 @@
           <!-- Modal Body -->
           <div class="popup-inner">
 
-            // creates a form
+            <!--creates a form-->
             <form id="editForm" @submit.prevent="editForm">
-              // left aligned form body
+              <!--left aligned form body -->
               <div class="edit-left">
-                // creates a label for the form for first names
+                <!--creates a label for the form for first names-->
                 <label for="editFirstName" class="form-label">First Name: </label>
 
-                // sets how the inputs look/what they say to put in and where to store them
+                <!--sets how the inputs look/what they say to put in and where to store them--> 
                 <input
                   name="firstName"
                   type="text"
