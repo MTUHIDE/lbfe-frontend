@@ -38,12 +38,12 @@
                 />
               </div>
 
-              // Right aligned form body
+              <!--Right aligned form body-->
               <div class="edit-right">
-                // creates a label for the form for last names
+                <!--creates a label for the form for last names-->
                 <label for="editLastName" class="form-label">Last Name: </label>
 
-                // sets how the inputs look/what they say to put in and where to store them
+                <!--sets how the inputs look/what they say to put in and where to store them-->
                 <input
                   name="lastName"
                   type="text"
@@ -54,12 +54,12 @@
                 />
               </div>
 
-              // Another left aligned form body
+              <!--Another left aligned form body-->
               <div class="edit-left">
-                // creates a label for the form for Phone numbers
+                <!--creates a label for the form for Phone numbers-->
                 <label for="editPhone" class="form-label">Phone Number: </label>
 
-                // sets how the inputs look/what they say to put in and where to store them
+                <!--sets how the inputs look/what they say to put in and where to store them-->
                 <input
                   name="phone"
                   type="text"
@@ -70,12 +70,12 @@
                 />
               </div>
 
-              // Another right aligned form body
+              <!--Another right aligned form body-->
               <div class="edit-right">
-                // creates a label for the form for Insurance ID
+                <!--creates a label for the form for Insurance ID-->
                 <label for="editInsurance" class="form-label">Insurance ID: </label>
 
-                // sets how the inputs look/what they say to put in and where to store them
+                <!--sets how the inputs look/what they say to put in and where to store them-->
                 <input
                   name="insurance"
                   type="text"
