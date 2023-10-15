@@ -19,6 +19,7 @@ export default {
         <form @submit.prevent="submitForm">
             <div class="row d-flex selectRow">Select Report Range</div>
 
+            <!--Date input fields for selecting the report range.-->
             <div class="row d-flex justify-content-center dateRow">
                <div class="col-sm-6 col-xs-6">
                     <div class="dates">
@@ -34,6 +35,7 @@ export default {
                </div>
             </div>
 
+            <!--Checkboxes for selecting report options.-->
             <div class="row d-flex justify-content-center valuesRow">
                 <div class="col-6 colLeft">
                     <label>
@@ -73,6 +75,7 @@ export default {
     </div>
 </template>
 
+<!--CSS-->
 <style scoped>
     .reportGenerator {
         margin-bottom: 1em;
