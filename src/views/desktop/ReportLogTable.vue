@@ -1,18 +1,16 @@
 <script>
-import reportFormTableOutput from '../../components/busforms/reportFormTableOutput.vue';
-
+import reportFormTableOutput from '../../components/busforms/ReportFormTableOutput.vue';
 export default {
   components: { reportFormTableOutput },
 };
-
 </script>
 
 <template>
-  <div class="report">
+  <div class="reports">
     <reportFormTableOutput />
   </div>
 </template>
 
 <style scoped>
-    
+
 </style>

@@ -69,7 +69,7 @@ export default {
             </div>
 
             <div class="row d-flex justify-content-center align-items-center generateRow">
-                <router-link to="/reportFormTableOutput.vue" class="btn btn-primary generateButton" id="reportSubmit"> Generate Reports <i class="fas fa-clipboard-list"></i></router-link>
+                <router-link to="/reportFormTable" class="btn btn-primary generateButton" id="reportSubmit"> Generate Reports <i class="fas fa-clipboard-list"></i></router-link>
             </div>
         </form>
     </div>

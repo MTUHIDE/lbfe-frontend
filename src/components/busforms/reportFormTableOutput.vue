@@ -1,21 +1,16 @@
 <script>
-import NavBar from "./components/navbar/Navbar.vue"
-require("./css/main-style.css");
-
 export default {
-  name: "App",
-  components: { NavBar },
+  name: "reportFormTableOutput",
 };
 </script>
 
 <template>
-        <div class="modal-inner" id="app">
-            <NavBar v-if="!$route.meta.hideNavbar"/>
-            <router-link to="/ReportForm.vue" class="btn btn-primary generateButton" id="reportSubmit"> back <i class="fas fa-clipboard-list"></i></router-link>
+        <div class="container" id="reportFormTableOutput">
+            <router-link to="/reports" class="btn btn-primary generateButton" id="reportSubmit"> back <i class="fas fa-clipboard-list"></i></router-link>
+        </div>
 
-            <div>
+        <div>
                 <h1> "Test" </h1>
-            </div>
         </div>
 </template>
 
