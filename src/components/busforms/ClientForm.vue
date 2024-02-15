@@ -18,7 +18,7 @@
 
           <!-- Modal Body -->
           <div class="popup-inner">
-            <form id="editForm" @submit.prevent="editForm">
+            <form id="editForm" method="POST" @submit.prevent="editForm">
             <div class = "edit-left">  
               <div class="edit-blanks">
                 <label for="editFirstName" class="form-label">First Name: </label>
@@ -127,7 +127,7 @@
               Close
             </button>
             <button
-              @click="saveDriver"
+              @click="saveElder"
               class="btn btn-primary custom-save-btn"
             >
               Save

@@ -88,7 +88,7 @@ export async function deleteDriver(driver) {
 // ********* ELDERS *************** 
 const clientUrl = baseUrl + '/elders' //changed from clients to elders
 
-// Call the getAlElders route in our backend
+// Call the getAllElders route in our backend
 export async function getClients() {
     const requestUrl = clientUrl + getList
     return await axios.get(requestUrl)
