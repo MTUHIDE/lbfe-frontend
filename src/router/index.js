@@ -14,8 +14,10 @@ const routes = [
     meta: { admin: true },
   },
   {
+    // report Forms table route, defines path and gives the executable a name
     path: '/reportFormTable',
     name: 'reportFormTableOutput',
+    // creates a component linked through a router
     component: () => import('../views/desktop/ReportLogTable.vue'),
     meta: { admin: true },
   },
