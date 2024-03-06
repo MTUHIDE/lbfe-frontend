@@ -14,6 +14,12 @@ const routes = [
     meta: { admin: true },
   },
   {
+    path: '/reportFormTable',
+    name: 'reportFormTableOutput',
+    component: () => import('../views/desktop/ReportLogTable.vue'),
+    meta: { admin: true },
+  },
+  {
     path: '/reports',
     name: 'ReportLogView',
     component: () => import('../views/desktop/ReportLogView.vue'),
