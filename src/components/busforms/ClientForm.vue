@@ -18,7 +18,7 @@
 
           <!-- Modal Body -->
           <div class="popup-inner">
-            <form id="editForm" @submit.prevent="editForm">
+            <form id="editForm" method="POST" @submit.prevent="editForm">
             <div class = "edit-left">  
               <div class="edit-blanks">
                 <label for="editFirstName" class="form-label">First Name: </label>
@@ -127,7 +127,7 @@
               Close
             </button>
             <button
-              @click="saveDriver"
+              @click="saveElder"
               class="btn btn-primary custom-save-btn"
             >
               Save
@@ -410,8 +410,7 @@ export default defineComponent({
       this.selectedElder = this.cachedElder;
 
       const response = !this.selectedElder.elderId
-        ? await this.createNewElder() // If appointment has no id attached, assume we're creating a new one
-        : await this.updateElder(); // else, update it
+        await this.createNewElder() // If appointment has no id attached, assume we're creating a new one
 
       if (!response || response.status >= 400) {
         return;
