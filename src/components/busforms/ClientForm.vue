@@ -410,8 +410,8 @@ export default defineComponent({
       this.selectedElder = this.cachedElder;
 
       const response = !this.selectedElder.elderId
-        ? await this.createNewElder() // If appointment has no id attached, assume we're creating a new one
-        : await this.updateElder(); // else, update it
+        await this.createNewElder() // If appointment has no id attached, assume we're creating a new one
+        //: await this.updateElder(); // else, update it
 
       if (!response || response.status >= 400) {
         return;
