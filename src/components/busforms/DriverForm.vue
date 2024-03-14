@@ -404,8 +404,8 @@ export default defineComponent({
       this.selectedDriver = this.cachedDriver;
 
       const response = !this.selectedDriver.driverId
-        ? await this.createNewDriver() // If appointment has no id attached, assume we're creating a new one
-        : await this.updateDriver(); // else, update it
+        await this.createNewDriver() // If appointment has no id attached, assume we're creating a new one
+        // : await this.updateDriver(); // else, update it
 
       if (!response || response.status >= 400) {
         return;
