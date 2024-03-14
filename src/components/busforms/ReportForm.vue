@@ -1,5 +1,7 @@
 <script>
+
 export default {
+    
     data() {
         return {
             startDate: '',
@@ -39,14 +41,14 @@ export default {
             <div class="row d-flex justify-content-center valuesRow">
                 <div class="col-6 colLeft">
                     <label>
-                      <input type="checkbox" id="cancelBox" v-model="cancellations">
+                      <input type="checkbox" id="cancelBox" name="cancellations" v-model="cancellations">
                       <div class="colLeftTextTop">Cancellations</div>
                     </label>
                 </div>
 
                 <div class="col-6 colRight">
                     <label>
-                        <input type="checkbox" id="transportBox" v-model="totalTransports">
+                        <input type="checkbox" id="transportBox" name="totalTransports" v-model="totalTransports">
                         <div class="colRightTextTop">Total Transports</div>
                     </label>
                 </div>
@@ -55,14 +57,14 @@ export default {
             <div class="row d-flex justify-content-center valuesRow">
                 <div class="col-6 colLeft">
                     <label>
-                        <input type="checkbox" id="wheelChairBox" v-model="wheelChairVans"> 
+                        <input type="checkbox" id="wheelChairBox" name="wheelchairVans" v-model="wheelChairVans"> 
                         <div class="colLeftTextBot">Wheelchair Vans</div>
                     </label>
                 </div>
 
                 <div class="col-6 colRight">
                     <label>
-                        <input type="checkbox" id="regionalBox" v-model="regionalTransports"> 
+                        <input type="checkbox" id="regionalBox" name="regionalTransports" v-model="regionalTransports"> 
                         <div class="colRightTextBot">Regional Transports</div>
                     </label>
                 </div>
