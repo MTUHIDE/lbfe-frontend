@@ -412,14 +412,12 @@ export default defineComponent({
       const response = !this.selectedElder.elderId
         await this.createNewElder() // If appointment has no id attached, assume we're creating a new one
         //: await this.updateElder(); // else, update it
-
-      if (!response || response.status >= 400) {
-        return;
-      }
-
       // Force reload to pick up the change
       this.reloadElders();
       this.hideModal();
+      if (!response || response.status >= 400) {
+        return;
+      }
     },
 
     async deleteElder() {
