@@ -21,7 +21,7 @@
           <div class="popup-inner">
 
             <!--creates a form-->
-            <form id="editForm" @submit.prevent="editForm">
+            <form id="editForm" method="POST" @submit.prevent="editForm">
               <!--left aligned form body -->
               <div class="edit-left">
                 <!--creates a label for the form for first names-->
@@ -404,8 +404,7 @@ export default defineComponent({
       this.selectedDriver = this.cachedDriver;
 
       const response = !this.selectedDriver.driverId
-        ? await this.createNewDriver() // If appointment has no id attached, assume we're creating a new one
-        : await this.updateDriver(); // else, update it
+        await this.createNewDriver() // If appointment has no id attached, assume we're creating a new one
 
       if (!response || response.status >= 400) {
         return;
