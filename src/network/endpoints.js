@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+
 // Define the base URL for our request
-const baseUrl = "http://localhost:9010/api" // TODO - Load from ENV
+// TODO - Load from ENV
+const baseUrl = "http://localhost:9010/api" 
 
 // Define the requestType we want. 
 // All routes have the same, so this lets us bulk edit if needed
@@ -13,17 +15,21 @@ const deleteDelete = '/delete'  // attach a body (only needs an id)
 
 
 // ********* APPOINTMENTS ********* 
-const appointmentUrl = baseUrl + '/appointments' //CHANGED THIS SO NOW ENDPOINTS WORK - DONT GET RID OF IT
+// changed from appointements to appointment, need further testing to ensure it works
+const appointmentUrl = baseUrl + '/appointment' //CHANGED THIS SO NOW ENDPOINTS WORK - DONT GET RID OF IT
 
 // Call the getAllAppointments route in our backend
 // TODO - **Find a better way**
 export async function getAppointments(startDate, endDate) {
 
     // TODO - Add date input prune check
+
     const requestUrl = appointmentUrl + getList + `?startDate=${startDate}&endDate=${endDate}`
     const response = await axios.get(requestUrl)
+    return await axios.get(requestUrl)
 
-    return response.data // Contains { status, count, appointment } and excludes raw meta
+    // wrong return 
+    //return response.data // Contains { status, count, appointment } and excludes raw meta
 }
 
 // Retrieve specified Appointment by Id
