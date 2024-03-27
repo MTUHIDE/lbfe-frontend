@@ -7,16 +7,16 @@ export default {
       statusOptions: ['Picked Up', 'Dropped Off', 'On My Way']
     }
   },
-  computed: {
-    driverName: {
-      get() {
-        return this.$store.state.driverName;
-      },
-      set(val) {
-        this.$store.commit('updateDriverName', val);
-      },
-    },
-  },
+  // computed: { ******Uncomment out after pinia store is implemented/current store is fixed
+  //   driverName: {
+  //     get() {
+  //       return this.$store.state.driverName;
+  //     },
+  //     set(val) {
+  //       this.$store.commit('updateDriverName', val);
+  //     },
+  //   },
+  // },
 };
 </script>
 
