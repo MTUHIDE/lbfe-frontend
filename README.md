@@ -20,5 +20,10 @@ npm run build
 npm run lint
 ```
 
+### Creates docker image
+```
+docker build -t lbfe-frontend .
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
