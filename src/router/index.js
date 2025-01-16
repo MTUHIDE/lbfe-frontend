@@ -34,7 +34,7 @@ const routes = [
   {
     path: '/elders',
     name: 'EldersView',
-    component: () => import('../views/desktop/ClientsView.vue'),
+    component: () => import('../views/desktop/EldersView.vue'),
     meta: { admin: true },
   },
   {

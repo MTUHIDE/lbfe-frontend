@@ -21,13 +21,13 @@ export default {
     getPreviousValues() {
       // this function gets the values for a particular appointment
       console.log(this.collapseId);
-      // const getUrl = '/api/client/' + this.collapseId;
+      // const getUrl = '/api/elder/' + this.collapseId;
       // console.log(getUrl);
       this.$axios
-        .get("/api/client/" + this.collapseId)
-        .then((clientsdata) => {
-          console.log(clientsdata.data["0"]); //THERE SEEMS TO BE SOMETHING WRONG HERE, NOTHING IS LOGGED TO THE CONSOLE.
-          this.oldName = clientsdata.data["0"].client_name;
+        .get("/api/elder/" + this.collapseId)
+        .then((eldersdata) => {
+          console.log(eldersdata.data["0"]); //THERE SEEMS TO BE SOMETHING WRONG HERE, NOTHING IS LOGGED TO THE CONSOLE.
+          this.oldName = eldersdata.data["0"].elder_name;
         })
         .catch((error) => {
           console.log(error);
@@ -80,7 +80,7 @@ export default {
             type="button"
             @click="this.getPreviousValues()"
             class="btn btn-primary px-3"
-            id="clientEdit"
+            id="elderEdit"
             data-bs-toggle="modal"
             data-bs-target="#editModal"
           >

@@ -1,14 +1,14 @@
 <script>
 // TODO - build the form, remove this comment when it is done
-import ClientForm from "../../components/busforms/ClientForm.vue";
+import ElderForm from "../../components/busforms/ElderForm.vue";
 export default {
-  components: { ClientForm },
+  components: { ElderForm },
 };
 </script>
 
 <template>
-  <div class="clients">
-    <ClientForm />
+  <div class="elders">
+    <ElderForm />
   </div>
 </template>
 

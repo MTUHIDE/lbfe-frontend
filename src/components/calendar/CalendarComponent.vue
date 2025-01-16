@@ -165,24 +165,23 @@
                 ></textarea>
               </div>
 
-              <!-- Elder Select - Defaults to given clientId -->
+              <!-- Elder Select - Defaults to given elderId -->
               <div class="edit-elder-name">
                 <label for="editName" class="form-label">Elder: </label>
                 <select
                   id="editName"
                   name="name"
                   class="form-select"
-                  v-model="cachedAppointment.clientId"
+                  v-model="cachedAppointment.elderId"
                   required
                 >
                   <option disabled>--Select an Elder--</option>
                   <option
-                    v-for="elder in clientsList"
+                    v-for="elder in eldersList"
                     :key="elder.id"
-                    v-bind:value="elder.clientId"
+                    v-bind:value="elder.elderId"
                   >
                     {{ elder.fullName }}
-                    elderPhone = elder.phoneNumber
                   </option>
                 </select>
               </div>
@@ -300,7 +299,7 @@ import {
   editAppointment,
   deleteAppointment,
   getDrivers,
-  getClients,
+  getElders,
 } from "../../network/endpoints";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -347,7 +346,7 @@ export default {
       selectedApppointment: {
         appointmentId: -1,
         title: "Enter Title...",
-        clientId: 0,
+        elderId: 0,
         driverId: 0,
         startDate: "",
         endDate: "",
@@ -364,9 +363,9 @@ export default {
 
       // These get loaded on modal open request
       driversListCount: 0,
-      clientsListCount: 0,
+      eldersListCount: 0,
       driversList: {}, // TODO - these should be synced to a store so we can use the same cache in other places
-      clientsList: {},
+      eldersList: {},
 
       // Define options for fullCalendar
       calendarOptions: {
@@ -451,7 +450,7 @@ export default {
   created() {
     this.reloadAppointments(); // Call calendar reload
     this.loadDriverList(); // These have to get poplated to remove the warnings
-    this.loadClientList();
+    this.loadElderList();
     this.clearAppointmentCache();
   },
 
@@ -639,11 +638,11 @@ export default {
       this.driversListCount = data.data.count;
     },
 
-    // Fires our endpoint to get client list, and total count for loaded clients
-    async loadClientList() {
-      const data = await getClients();
-      this.clientsList = JSON.parse(JSON.stringify(data.data.clients)); // De-proxy
-      this.clientsListCount = data.data.count;
+    // Fires our endpoint to get elder list, and total count for loaded elders
+    async loadElderList() {
+      const data = await getElders();
+      this.eldersList = JSON.parse(JSON.stringify(data.data.elders)); // De-proxy
+      this.eldersListCount = data.data.count;
     },
 
     // Set addAppointment to be current Selected appointment, call update and reload
@@ -681,7 +680,7 @@ export default {
     clearAppointmentCache() {
       this.selectedApppointment = {
         title: "",
-        clientId: 0,
+        elderId: 0,
         driverId: 0,
         startDate: "",
         endDate: "",
@@ -698,7 +697,7 @@ export default {
     // Loads necessary information and fires event to open modal
     async showAddAppointmentModal() {
       this.loadDriverList();
-      this.loadClientList();
+      this.loadElderList();
 
       this.cachedAppointment = this.selectedApppointment;
       this.toggleModal(); // References AddEditAppointment Modal
