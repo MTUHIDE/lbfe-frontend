@@ -1,5 +1,4 @@
 import axios from 'axios'
-// const axios = require('axios').default
 
 // Define the base URL for our request
 const baseUrl = "http://localhost:9010/api" // TODO - Load from ENV
