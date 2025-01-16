@@ -17,5 +17,10 @@ export const Appointment = {
 }
 
 // Define a struct to use as an arbitrary Driver type
-
+export const driver = {
+    
+}
 // Define a struct to use as an arbitrary Client type
+export const client = {
+    
+}

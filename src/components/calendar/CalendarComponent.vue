@@ -222,22 +222,22 @@
               </div>
 
               <div class="edit-vehicle">
-                <label for="editNeedsVehicle" class="form-label">Needs LBFE Vehicle: </label>
+                <label class="form-label">Needs LBFE Vehicle: </label>
                 <input type="checkbox" v-model="cachedAppointment.needsLBFEVehicle" :options="vehicleOptions" id="vehicle">
               </div>                 
 
               <div class="edit-baraga">
-                <label for="editBaraga" class="form-label">Baraga/Marquette: </label>
+                <label  class="form-label">Baraga/Marquette: </label>
                 <input type="checkbox" v-model="cachedAppointment.baraga" :options="baragaOptions" id="baraga">
               </div>           
 
               <div class="edit-confirmed">
-                <label for="editConfirmed" class="form-label">Confirmed By Driver: </label>
+                <label class="form-label">Confirmed By Driver: </label>
                 <input type="checkbox" v-model="cachedAppointment.confirmed" :options="confirmedOptions" id="confirmed">
               </div>
 
               <div class="edit-status">
-                <label for="editStatusBar" class="form-label">Status: </label>
+                <label class="form-label">Status: </label>
                 <select class="form-select" v-model="cachedAppointment.statusBar" :options="statusBar" id="status">
                   <option selected>On the way</option>
                   <option selected>Picked Up</option>
