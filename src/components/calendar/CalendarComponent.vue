@@ -162,7 +162,18 @@
                   v-model="cachedAppointment.elderPhone"
                   placeholder = "Will autofill once elder is selected"
                   required
-                ></textarea>
+                >
+          
+              </textarea>
+              
+              <!-- <option
+            
+                    v-for="elder in eldersList"
+                    :key="elder.id"
+                    v-bind:value="elder.id.elderPhone"
+                  >
+                    {{elder.id }}
+                  </option> -->
               </div>
 
               <!-- Elder Select - Defaults to given elderId -->
@@ -226,13 +237,18 @@
               </div>                 
 
               <div class="edit-baraga">
-                <label  class="form-label">Baraga/Marquette: </label>
+                <label  class="form-label">Baraga: </label>
                 <input type="checkbox" v-model="cachedAppointment.baraga" :options="baragaOptions" id="baraga">
-              </div>           
+              </div>         
 
               <div class="edit-confirmed">
                 <label class="form-label">Confirmed By Driver: </label>
                 <input type="checkbox" v-model="cachedAppointment.confirmed" :options="confirmedOptions" id="confirmed">
+              </div>
+
+              <div class="edit-marquette">
+                <label  class="form-label">Marquette: </label>
+                <input type="checkbox" v-model="cachedAppointment.marquette" :options="marquetteOptions" id="marquette">
               </div>
 
               <div class="edit-status">
@@ -300,6 +316,7 @@ import {
   deleteAppointment,
   getDrivers,
   getElders,
+  elderPhone
 } from "../../network/endpoints";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -356,6 +373,7 @@ export default {
         mobility: "",
         needsLBFEVehicle: false,
         baraga: false,
+        marquette:false,
         confirmed: false,
       },
 
@@ -645,6 +663,12 @@ export default {
       this.eldersListCount = data.data.count;
     },
 
+    async loadElderPhone() {
+      const data = await elderPhone();
+      this.elderPhone = JSON.parse(JSON.stringify(data.data));
+       
+    },
+
     // Set addAppointment to be current Selected appointment, call update and reload
     async saveAppointment() {
       this.selectedApppointment = this.cachedAppointment;
@@ -690,6 +714,7 @@ export default {
         mobility: "",
         needsLBFEVehicle: false,
         baraga: false,
+        marquette: false,
         confirmed: false,
       };
     },
@@ -728,7 +753,7 @@ export default {
 
 .edit-status {
   float: left;
-  padding-top: 45px;
+  padding-top: 30px;
   width: 98%;
 }
 .edit-vehicle {
@@ -743,10 +768,17 @@ export default {
   width: 13em;
 }
 
+.edit-marquette {
+  float:right;
+  padding-top: 23px;
+  margin-left:20px;
+  width:13em;
+}
+
 .edit-confirmed {
   float: left; 
   padding-top: 20px;
-  margin-right: 200px;
+  margin-right: 100px;
   width: 13em;
 }
 

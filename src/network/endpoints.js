@@ -129,3 +129,9 @@ export async function deleteElder(elder) {
     const response = await axios.post(requestUrl, elder) // Pass id in body
     return response
 }
+
+export async function elderPhone(elder) {
+    const requestUrl = elderUrl + getOne
+    const response = await axios.post(requestUrl, elder) // Pass id in body
+    return response.elderPhone
+}

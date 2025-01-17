@@ -4,6 +4,8 @@ export default {
     appointmentNotes: String,
     elderName: String,
     driverName: String,
+    driverPhone: String,
+    elderPhone: String,
     eventStart: String,
     pickupAddress: String,
     destinationAddress: String,
