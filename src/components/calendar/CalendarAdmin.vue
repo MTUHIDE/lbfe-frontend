@@ -314,14 +314,7 @@ export default {
   >
     <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-md-down">
       <div class="modal-content">
-        <div
-          class="modal-header"
-          style="
-             {
-              border: none;
-            }
-          "
-        >
+        <div class="modal-header" :style="{border: 'none'}">
           <h5 class="modal-title">Add Appointment</h5>
           <button
             type="button"
