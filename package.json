@@ -30,6 +30,7 @@
     "msal": "^1.4.16",
     "mutationobserver-shim": "^0.3.7",
     "nodemon": "^3.0.2",
+    "pinia": "^2.3.1",
     "popper.js": "^1.16.1",
     "register-service-worker": "^1.7.1",
     "tiny-emitter": "^2.1.0",
