@@ -365,11 +365,11 @@ export default defineComponent({
         Backend assumes bad timezone, handles timezone conversion
     */
     async loadDrivers() {
-        let data = await getDrivers();
+        const data = await getDrivers();
         //CODE FROM LOAD DRIVER LIST FROM CALENDAR COMPONENT
         // const data = await getDrivers();
-        // this.driversList = JSON.parse(JSON.stringify(data.data.drivers)); // De-proxy
-        // this.driversListCount = data.data.count;        
+        this.driversList = JSON.parse(JSON.stringify(data.data.drivers)); // De-proxy
+        this.driversListCount = data.data.count;        
         return data; //FIGURE OUT HOW TO PARSE DATA
     },
     // Calls our create appointment script with the current selectedApppointment

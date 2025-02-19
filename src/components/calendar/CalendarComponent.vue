@@ -162,27 +162,37 @@
                   v-model="cachedAppointment.elderPhone"
                   placeholder = "Will autofill once elder is selected"
                   required
-                ></textarea>
+                >
+          
+              </textarea>
+              
+              <!-- <option
+            
+                    v-for="elder in eldersList"
+                    :key="elder.id"
+                    v-bind:value="elder.id.elderPhone"
+                  >
+                    {{elder.id }}
+                  </option> -->
               </div>
 
-              <!-- Elder Select - Defaults to given clientId -->
+              <!-- Elder Select - Defaults to given elderId -->
               <div class="edit-elder-name">
                 <label for="editName" class="form-label">Elder: </label>
                 <select
                   id="editName"
                   name="name"
                   class="form-select"
-                  v-model="cachedAppointment.clientId"
+                  v-model="cachedAppointment.elderId"
                   required
                 >
                   <option disabled>--Select an Elder--</option>
                   <option
-                    v-for="elder in clientsList"
+                    v-for="elder in eldersList"
                     :key="elder.id"
-                    v-bind:value="elder.clientId"
+                    v-bind:value="elder.elderId"
                   >
                     {{ elder.fullName }}
-                    elderPhone = elder.phoneNumber
                   </option>
                 </select>
               </div>
@@ -227,13 +237,18 @@
               </div>                 
 
               <div class="edit-baraga">
-                <label  class="form-label">Baraga/Marquette: </label>
+                <label  class="form-label">Baraga: </label>
                 <input type="checkbox" v-model="cachedAppointment.baraga" :options="baragaOptions" id="baraga">
-              </div>           
+              </div>         
 
               <div class="edit-confirmed">
                 <label class="form-label">Confirmed By Driver: </label>
                 <input type="checkbox" v-model="cachedAppointment.confirmed" :options="confirmedOptions" id="confirmed">
+              </div>
+
+              <div class="edit-marquette">
+                <label  class="form-label">Marquette: </label>
+                <input type="checkbox" v-model="cachedAppointment.marquette" :options="marquetteOptions" id="marquette">
               </div>
 
               <div class="edit-status">
@@ -300,7 +315,8 @@ import {
   editAppointment,
   deleteAppointment,
   getDrivers,
-  getClients,
+  getElders,
+  elderPhone
 } from "../../network/endpoints";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -347,8 +363,9 @@ export default {
       selectedApppointment: {
         appointmentId: -1,
         title: "Enter Title...",
-        clientId: 0,
+        elderId: 0,
         driverId: 0,
+        elderPhone: "",
         startDate: "",
         endDate: "",
         pickupAddress: "",
@@ -357,6 +374,7 @@ export default {
         mobility: "",
         needsLBFEVehicle: false,
         baraga: false,
+        marquette:false,
         confirmed: false,
       },
 
@@ -364,9 +382,10 @@ export default {
 
       // These get loaded on modal open request
       driversListCount: 0,
-      clientsListCount: 0,
+      eldersListCount: 0,
       driversList: {}, // TODO - these should be synced to a store so we can use the same cache in other places
-      clientsList: {},
+      eldersList: {},
+      elderPhone: {},
 
       // Define options for fullCalendar
       calendarOptions: {
@@ -451,7 +470,7 @@ export default {
   created() {
     this.reloadAppointments(); // Call calendar reload
     this.loadDriverList(); // These have to get poplated to remove the warnings
-    this.loadClientList();
+    this.loadElderList();
     this.clearAppointmentCache();
   },
 
@@ -639,11 +658,16 @@ export default {
       this.driversListCount = data.data.count;
     },
 
-    // Fires our endpoint to get client list, and total count for loaded clients
-    async loadClientList() {
-      const data = await getClients();
-      this.clientsList = JSON.parse(JSON.stringify(data.data.clients)); // De-proxy
-      this.clientsListCount = data.data.count;
+    // Fires our endpoint to get elder list, and total count for loaded elders
+    async loadElderList() {
+      const data = await getElders();
+      this.eldersList = JSON.parse(JSON.stringify(data.data.elders)); // De-proxy
+      this.eldersListCount = data.data.count;
+    },
+
+    async loadElderPhone() {
+      const data = await elderPhone();
+      this.elderPhone = JSON.parse(JSON.stringify(data.data));
     },
 
     // Set addAppointment to be current Selected appointment, call update and reload
@@ -681,7 +705,7 @@ export default {
     clearAppointmentCache() {
       this.selectedApppointment = {
         title: "",
-        clientId: 0,
+        elderId: 0,
         driverId: 0,
         startDate: "",
         endDate: "",
@@ -691,6 +715,7 @@ export default {
         mobility: "",
         needsLBFEVehicle: false,
         baraga: false,
+        marquette: false,
         confirmed: false,
       };
     },
@@ -698,7 +723,7 @@ export default {
     // Loads necessary information and fires event to open modal
     async showAddAppointmentModal() {
       this.loadDriverList();
-      this.loadClientList();
+      this.loadElderList();
 
       this.cachedAppointment = this.selectedApppointment;
       this.toggleModal(); // References AddEditAppointment Modal
@@ -729,7 +754,7 @@ export default {
 
 .edit-status {
   float: left;
-  padding-top: 45px;
+  padding-top: 30px;
   width: 98%;
 }
 .edit-vehicle {
@@ -744,10 +769,17 @@ export default {
   width: 13em;
 }
 
+.edit-marquette {
+  float:right;
+  padding-top: 23px;
+  margin-left:20px;
+  width:13em;
+}
+
 .edit-confirmed {
   float: left; 
   padding-top: 20px;
-  margin-right: 200px;
+  margin-right: 100px;
   width: 13em;
 }
 

@@ -25,8 +25,8 @@
 
 <script>
 import customTokenCredential from '../CustomTokenProvider';
-import { BlobServiceClient } from '@azure/storage-blob';
-import { PublicClientApplication } from '@azure/msal-browser';
+import { BlobServiceElder } from '@azure/storage-blob';
+import { PublicElderApplication } from '@azure/msal-browser';
 import { mapMutations } from 'vuex';
 
 const storageAccountName = 'lbfebackup';
@@ -61,13 +61,13 @@ export default {
         await this.getAccessToken();
       }
       let tokenCredential = new customTokenCredential(this.$store.state.accessToken);
-      const blobClient = new BlobServiceClient(
+      const blobElder = new BlobServiceElder(
         `https://${storageAccountName}.blob.core.windows.net`,
         tokenCredential,
       );
 
       let i = 1;
-      const iter = blobClient.listContainers();
+      const iter = blobElder.listContainers();
       let containerItem = await iter.next();
       while (!containerItem.done) {
         console.log(`Container ${i++}: ${containerItem.value.name}`);
@@ -82,7 +82,7 @@ export default {
       let request = {
         scopes: ['https://storage.azure.chttp://127.0.0.1:8000/om/user_impersonation'],
       };
-      const msalInstance = new PublicClientApplication(
+      const msalInstance = new PublicElderApplication(
         this.$store.state.msalConfig,
       );
       try {

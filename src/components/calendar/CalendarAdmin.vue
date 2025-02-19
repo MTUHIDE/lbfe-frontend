@@ -15,14 +15,14 @@ import {
   getAppointments,
   getAppointmentById,
   editAppointment,
-  getClients,
+  getElders,
   getDrivers,
 } from "./../../network/endpoints";
 
 import {
   appointment,
   driver,
-  client
+  elder
 } from "./../../network/objects"
 
 export default {
@@ -48,19 +48,19 @@ export default {
       addAppEndDate: "",
       addPickupAddress: "",
       addDropoffAddress: "",
-      addClientNotes: "",
+      addElderNotes: "",
       addDrivers: [],
-      addClients: [],
+      addElders: [],
       selectedDriver: {
         addDriverId: "",
       },
-      selectedClient: {
-        addClientId: "",
+      selectedElder: {
+        addElderId: "",
       },
       appointmentNotes: "",
-      clientId: "",
+      elderId: "",
       driverId: "",
-      clientName: "",
+      elderName: "",
       driverName: "",
       startDateTime: "",
       endDateTime: "",
@@ -102,7 +102,7 @@ export default {
           this.cpModal.show();
           this.appointmentNotes =
             clickData.event.extendedProps["appointment_notes"];
-          this.clientName = clickData.event.extendedProps["client_name"];
+          this.elderName = clickData.event.extendedProps["elder_name"];
           this.driverName = clickData.event.extendedProps["driver_name"];
           this.pickupAddress = clickData.event.extendedProps["pickup_address"];
           this.destinationAddress =
@@ -145,7 +145,7 @@ export default {
     // })
     // $(this.$refs.my_modal).on('hidden.bs.modal', this.doSomething);
     this.getDriversList();
-    this.getClientsList();
+    this.getEldersList();
   },
   methods: {
     deleteSuccess() {
@@ -195,13 +195,13 @@ export default {
     },
     showModal() {
       (this.addTitle = ""),
-        (this.selectedClient.addClientId = ""),
+        (this.selectedElder.addElderId = ""),
         (this.selectedDriver.addDriverId = ""),
         (this.addAppDate = ""),
         (this.addAppEndDate = ""),
         (this.addPickupAddress = ""),
         (this.addDropoffAddress = ""),
-        (this.addClientNotes = ""),
+        (this.addElderNotes = ""),
         this.cpAddModal.show();
     },
     hideModal() {
@@ -235,15 +235,15 @@ export default {
       this.$axios
         .post("/api/appointment/store", {
           title: this.addTitle,
-          clientId: this.selectedClient.addClientId,
+          elderId: this.selectedElder.addElderId,
           driverId: this.selectedDriver.addDriverId,
           appDate: this.addAppDate,
           appEndDate: this.addAppEndDate,
           pickupAddress: this.addPickupAddress,
           dropoffAddress: this.addDropoffAddress,
-          clientNotes: this.addClientNotes,
-          // clientId: this.,
-          // driverId: this.,
+          elderNotes: this.addElderNotes,
+          elderId: this.addElderId,
+          driverId: this.addDriverId,
         })
         .then((response) => {
           this.hideModal();
@@ -259,8 +259,8 @@ export default {
       this.addDrivers = getDrivers();
     },
 
-    getClientsList() {
-      this.addClients = getClients();
+    getEldersList() {
+      this.addElders = getElders();
     },
 
     editSuccess() {
@@ -293,7 +293,7 @@ export default {
     :pickup-address="pickupAddress"
     :destination-address="destinationAddress"
     :driver-name="driverName"
-    :client-name="clientName"
+    :elder-name="elderName"
     :appointment-notes="appointmentNotes"
     :event-start="startDateTime"
     :event-end="endDateTime"
@@ -317,9 +317,7 @@ export default {
         <div
           class="modal-header"
           style="
-             {
               border: none;
-            }
           "
         >
           <h5 class="modal-title">Add Appointment</h5>
@@ -342,8 +340,8 @@ export default {
                 v-model="addTitle"
                 required
               />
-              <!-- <p v-if="!editing">{{clientName}}</p> -->
-              <!-- <p>{{clientName}}</p> -->
+              <!-- <p v-if="!editing">{{elderName}}</p> -->
+              <!-- <p>{{elderName}}</p> -->
             </div>
 
             <div class="mb-3">
@@ -352,19 +350,19 @@ export default {
                 id="name"
                 name="name"
                 class="form-select"
-                v-model="selectedClient.addClientId"
+                v-model="selectedElder.addElderId"
                 required
               >
                 <option disabled>--Select an Elder--</option>
                 <option
-                  v-for="addClientId in addClients"
-                  :key="addClientId.id"
-                  v-bind:value="addClientId.id"
+                  v-for="addElderId in addElders"
+                  :key="addElderId.id"
+                  v-bind:value="addElderId.id"
                 >
-                  {{ addClientId.client_name }}
+                  {{ addElderId.elder_name }}
                 </option>
               </select>
-              <!-- <p v-if="!editing">{{clientName}}</p> -->
+              <!-- <p v-if="!editing">{{elderName}}</p> -->
             </div>
 
             <div class="mb-3">
@@ -450,10 +448,10 @@ export default {
                 id="notes"
                 name="notes"
                 class="form-control"
-                v-model="addClientNotes"
+                v-model="addElderNotes"
               ></textarea>
-              <!-- <p v-if="!editing">{{clientNotes}}</p> -->
-              <!-- <p>{{clientNotes}}</p> -->
+              <!-- <p v-if="!editing">{{elderNotes}}</p> -->
+              <!-- <p>{{elderNotes}}</p> -->
             </div>
 
             <!-- <button type="submit" class="btn btn-primary" id="appointSubmit">Submit</button> -->

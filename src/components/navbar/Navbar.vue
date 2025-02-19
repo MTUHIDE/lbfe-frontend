@@ -11,8 +11,8 @@ export default {
     async function logout() {
       // Load config
       console.dir('hello....');
-      let client = new Msal.UserAgentApplication(msalConfig);
-      let status = await client.logout();
+      let elder = new Msal.UserAgentApplication(msalConfig);
+      let status = await elder.logout();
       console.dir(status);
     }
 

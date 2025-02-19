@@ -23,7 +23,7 @@ export default {
         }
         return {
             appointmentNotes: '',
-            clientName: '',
+            elderName: '',
             driverName: '',
             startDateTime: '',
             pickupAddress: '',
@@ -60,7 +60,7 @@ export default {
                 eventClick: (clickData) => {
                     this.cpModal.show();
                     this.appointmentNotes = clickData.event.extendedProps['appointment_notes'];
-                    this.clientName = clickData.event.extendedProps['client_name'];
+                    this.elderName = clickData.event.extendedProps['elder_name'];
                     this.driverName = clickData.event.extendedProps['driver_name'];
                     this.pickupAddress = clickData.event.extendedProps['pickup_address'];
                     this.destinationAddress = clickData.event.extendedProps['destination_address'];
@@ -96,7 +96,7 @@ export default {
 
 <template>
   <div class="container-fluid">
-    <DriverCalendarPopup :mobility="mobility" :appointment-title="appointmentTitle" :pickup-address="pickupAddress" :destination-address="destinationAddress" :driver-name="driverName" :client-name="clientName" :appointment-notes="appointmentNotes" :event-start="startDateTime">
+    <DriverCalendarPopup :mobility="mobility" :appointment-title="appointmentTitle" :pickup-address="pickupAddress" :destination-address="destinationAddress" :driver-name="driverName" :elder-name="elderName" :appointment-notes="appointmentNotes" :event-start="startDateTime">
         <!-- <DriverAppointmentInfo :redirect="'/calendar'" :activeBack="'none'"/> -->
     </DriverCalendarPopup>
 

@@ -11,14 +11,14 @@ export default {
     data() {
 
         // Load config
-        let client = new Msal.UserAgentApplication(msalConfig);
+        let elder = new Msal.UserAgentApplication(msalConfig);
         let request = {
             scopes: ['user.read']
         };
 
         // Silently acquire user token
         async function getTokenSilent() {
-            return await client.acquireTokenSilent(request);
+            return await elder.acquireTokenSilent(request);
         }
 
         // Pass in token to get user data from MS Graph API
@@ -61,7 +61,7 @@ export default {
         
         async function runMSALGetToken() {
             storeToken(request); // keep the response for other pages to access....
-            let loginResponse = await client.loginPopup(request);
+            let loginResponse = await elder.loginPopup(request);
             let response = await getUserMSData();
 
             evalUserPermission(response);

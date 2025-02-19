@@ -94,38 +94,44 @@ export async function deleteDriver(driver) {
 
 
 // ********* ELDERS *************** 
-const clientUrl = baseUrl + '/elders' //changed from clients to elders
+const elderUrl = baseUrl + '/elders' //changed from elders to elders
 
 // Call the getAlElders route in our backend
-export async function getClients() {
-    const requestUrl = clientUrl + getList
+export async function getElders() {
+    const requestUrl = elderUrl + getList
     const response = await axios.get(requestUrl)
     return response
 }
 
 // Retrieve specified Elder by Id
 export async function getElderById(id) {
-    const requestUrl = clientUrl + getOne + `${id}` // Intended to be manual, users can look up shit this way anyway
+    const requestUrl = elderUrl + getOne + `${id}` // Intended to be manual, users can look up shit this way anyway
     const response = await axios.get(requestUrl)
     return response
 }
 
 // Create a new elder --> Assume elder object contains necessary info, route flags inproper usage
 export async function createElder(elder) {
-    const requestUrl = clientUrl + postCreate
+    const requestUrl = elderUrl + postCreate
     const response = await axios.post(requestUrl, elder) // Pass elder object
     return response
 }
 
 // Edit a given elder --> Assume elder object contains necessary info, route flags inproper usage
 export async function editElder(elder) {
-    const requestUrl = clientUrl + postEdit
+    const requestUrl = elderUrl + postEdit
     const response = await axios.post(requestUrl, elder) // Pass elder object
     return response
 }
 
 export async function deleteElder(elder) {
-    const requestUrl = clientUrl + deleteDelete
+    const requestUrl = elderUrl + deleteDelete
     const response = await axios.post(requestUrl, elder) // Pass id in body
     return response
+}
+
+export async function elderPhone(elder) {
+    const requestUrl = elderUrl + getOne
+    const response = await axios.post(requestUrl, elder) // Pass id in body
+    return response.elderPhone
 }
