@@ -1,5 +1,5 @@
 <script>
-  import Calendar from '../../components/driverCalendar/CalendarDriver.vue';
+  import Calendar from '@/components/driverCalendar/CalendarDriver.vue';
 
   export default {
   props: {},

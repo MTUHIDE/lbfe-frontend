@@ -1,5 +1,5 @@
 <script>
-import CalendarComponent from "../../components/calendar/CalendarComponent.vue";
+import CalendarComponent from "@/components/calendar/CalendarComponent.vue";
 
 export default {
   props: {},

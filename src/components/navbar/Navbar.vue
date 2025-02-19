@@ -1,7 +1,7 @@
 <script>
 import NavbarLink from './NavbarLink'
 import * as Msal from 'msal'; 
-import msalConfig from '../../msal/msalConfig'
+import msalConfig from '@/msal/msalConfig'
 
 export default {
   name: "NavBar",
@@ -26,7 +26,7 @@ export default {
 
 <template>
   <ul class="navbar flexbox" id="collapsable-navbar">
-      <img class="img" contain alt="LBFE logo" src="./../../images/LBFE_white_upmichigan.png"/>
+      <img class="img" contain alt="LBFE logo" src="@/images/LBFE_white_upmichigan.png"/>
 
       <!-- Navbar - Admin Items -->
       <form v-if="$route.meta.admin">

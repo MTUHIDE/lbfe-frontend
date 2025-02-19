@@ -1,5 +1,5 @@
 <script>
-import reportFormTableOutput from '../../components/busforms/reportFormTableOutput.vue';
+import reportFormTableOutput from '@/components/busforms/reportFormTableOutput.vue';
 export default {
   components: { reportFormTableOutput },
 };

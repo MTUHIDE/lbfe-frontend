@@ -1,6 +1,6 @@
 <script>
 // TODO - build the form, remove this comment when it is done
-import DriverForm from "../../components/busforms/DriverForm.vue";
+import DriverForm from "@/components/busforms/DriverForm.vue";
 export default {
   components: { DriverForm },
 };

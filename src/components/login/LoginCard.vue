@@ -15,7 +15,7 @@ export default {
       <div class="login-form">
         <div id="disabledWrapper">
           <form id="loginForm" action="" method="post">
-            <img alt="LBFE logo" src="../../images/LBFE_LOGOH_red_upmichigan.png" />
+            <img alt="LBFE logo" src="@/images/LBFE_LOGOH_red_upmichigan.png" />
             <br />
               <h2 class="text-center">Welcome to Little Brothers!</h2>
               <h4 class="text-center">Login to get started</h4>

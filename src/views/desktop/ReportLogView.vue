@@ -1,5 +1,5 @@
 <script>
-import ReportForm from '../../components/busforms/ReportForm.vue';
+import ReportForm from '@/components/busforms/ReportForm.vue';
 export default {
   components: { ReportForm },
 };

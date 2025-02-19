@@ -17,13 +17,13 @@ import {
   editAppointment,
   getElders,
   getDrivers,
-} from "./../../network/endpoints";
+} from "@/network/endpoints";
 
 import {
   appointment,
   driver,
   elder
-} from "./../../network/objects"
+} from "@/network/objects"
 
 export default {
   components: {

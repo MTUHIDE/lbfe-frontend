@@ -185,7 +185,7 @@ import {
   createElder,
   editElder,
   deleteElder,
-} from "../../network/endpoints";
+} from "@/network/endpoints";
 // Fake Data for 'asc' sortable
 const sampleData1 = (offst, limit) => {
   offst = offst + 1;

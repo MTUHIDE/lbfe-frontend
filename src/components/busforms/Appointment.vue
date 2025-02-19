@@ -101,7 +101,7 @@
 </template>
 
 <script>
-  import { getAppointmentById, getElders, getDrivers } from "./../../network/endpoints"
+  import { getAppointmentById, getElders, getDrivers } from "@/network/endpoints"
   export default {
     components: {
     },

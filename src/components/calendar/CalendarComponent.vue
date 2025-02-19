@@ -317,7 +317,7 @@ import {
   getDrivers,
   getElders,
   elderPhone
-} from "../../network/endpoints";
+} from "@/network/endpoints";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
