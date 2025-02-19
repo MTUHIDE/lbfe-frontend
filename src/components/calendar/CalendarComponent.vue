@@ -365,6 +365,7 @@ export default {
         title: "Enter Title...",
         elderId: 0,
         driverId: 0,
+        elderPhone: "",
         startDate: "",
         endDate: "",
         pickupAddress: "",
@@ -384,6 +385,7 @@ export default {
       eldersListCount: 0,
       driversList: {}, // TODO - these should be synced to a store so we can use the same cache in other places
       eldersList: {},
+      elderPhone: {},
 
       // Define options for fullCalendar
       calendarOptions: {
@@ -666,7 +668,6 @@ export default {
     async loadElderPhone() {
       const data = await elderPhone();
       this.elderPhone = JSON.parse(JSON.stringify(data.data));
-       
     },
 
     // Set addAppointment to be current Selected appointment, call update and reload

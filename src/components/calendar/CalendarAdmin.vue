@@ -242,8 +242,8 @@ export default {
           pickupAddress: this.addPickupAddress,
           dropoffAddress: this.addDropoffAddress,
           elderNotes: this.addElderNotes,
-          // elderId: this.,
-          // driverId: this.,
+          elderId: this.addElderId,
+          driverId: this.addDriverId,
         })
         .then((response) => {
           this.hideModal();
@@ -317,9 +317,7 @@ export default {
         <div
           class="modal-header"
           style="
-             {
               border: none;
-            }
           "
         >
           <h5 class="modal-title">Add Appointment</h5>
