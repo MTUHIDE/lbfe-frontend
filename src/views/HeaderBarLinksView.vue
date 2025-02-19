@@ -23,6 +23,7 @@
 
 <script>
 import { PublicElderApplication } from '@azure/msal-browser';
+import { useSecurityStore } from '@/stores/security';
 
 export default {
   name: 'HeaderBar',

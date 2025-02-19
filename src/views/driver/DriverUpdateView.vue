@@ -1,4 +1,7 @@
 <script>
+import { useMenuStore } from '@/stores/menu';
+import { useSecurityStore } from '@/stores/security';
+
 export default {
   data() {
     return {

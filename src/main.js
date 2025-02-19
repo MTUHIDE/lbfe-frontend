@@ -19,7 +19,5 @@ app.config.globalProperties.$emitter = new Emitter();
 
 app
     .use(router)
-    // .use(store) // TODO - Fix once Pinia is implemented
     .use(pinia)
-    .use(Vuex)
     .mount('#app');
