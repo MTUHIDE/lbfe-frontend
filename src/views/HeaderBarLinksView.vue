@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { PublicClientApplication } from '@azure/msal-browser';
+import { PublicElderApplication } from '@azure/msal-browser';
 
 export default {
   name: 'HeaderBar',
@@ -33,7 +33,7 @@ export default {
     };
   },
   async created() {
-    this.$msalInstance = new PublicClientApplication(
+    this.$msalInstance = new PublicElderApplication(
       this.$store.state.msalConfig,
     );
   },

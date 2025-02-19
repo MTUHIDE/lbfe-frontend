@@ -8,7 +8,7 @@ export const Appointment = {
     pickupAddress: null, 
     destinationAddress: null,
     driverId: null, 
-    clientId: null, 
+    elderId: null, 
     createdAt: null, 
     updatedAt: null, 
     isCancelled: null, 
@@ -17,5 +17,10 @@ export const Appointment = {
 }
 
 // Define a struct to use as an arbitrary Driver type
-
-// Define a struct to use as an arbitrary Client type
+export const driver = {
+    
+}
+// Define a struct to use as an arbitrary Elder type
+export const elder = {
+    
+}

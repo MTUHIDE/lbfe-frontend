@@ -2,8 +2,10 @@
 export default {
   props: {
     appointmentNotes: String,
-    clientName: String,
+    elderName: String,
     driverName: String,
+    driverPhone: String,
+    elderPhone: String,
     eventStart: String,
     pickupAddress: String,
     destinationAddress: String,
@@ -35,7 +37,7 @@ export default {
                   <div class="iconTitleflex"><span class="iconWrap"><i class="fas fa-map-marker-alt"></i></span>Destination Address:</div><p>{{ destinationAddress }}</p>
                     <div class="iconTitleflex"><span class="iconWrap"><i class="fas fa-clipboard"></i></span>Appointment Notes:</div><p>{{ appointmentNotes }}</p>
                     <div class="iconTitleflex"><span class="iconWrap"><i class="fas fa-wheelchair"></i></span>Mobility:</div><p>{{ mobility }}</p>
-                    <div class="iconTitleflex"><span class="iconWrap"><i class="fas fa-user"></i></span>Elder Name:</div><p>{{ clientName }}</p>
+                    <div class="iconTitleflex"><span class="iconWrap"><i class="fas fa-user"></i></span>Elder Name:</div><p>{{ elderName }}</p>
                     <div class="iconTitleflex"><span class="iconWrap"><i class="fas fa-shuttle-van"></i></span>Driver Name:</div><p>{{ driverName }}</p>
 
                 </div>

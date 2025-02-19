@@ -22,21 +22,21 @@
         <div class="mb-3">
           <label for="title" class="form-label">Title: </label>
           <input name="title" type="text" class="form-control" v-if="editing" id="title" v-model="title" required>
-          <!-- <p v-if="!editing">{{clientName}}</p> -->
-          <!-- <p>{{clientName}}</p> -->
+          <!-- <p v-if="!editing">{{elderName}}</p> -->
+          <!-- <p>{{elderName}}</p> -->
         </div>
 
         <div class="mb-3">
-          <label for="name" class="form-label">Client: </label>
-          <select id="name" name="name" class="form-select" v-if="editing" v-model="selectedClient.clientName" required>
-            <option disabled>--Select a Client--</option>
-            <option v-for="clientName in clients" :key="clientName.client_name">
-                {{ clientName.client_name }}
+          <label for="name" class="form-label">Elder: </label>
+          <select id="name" name="name" class="form-select" v-if="editing" v-model="selectedElder.elderName" required>
+            <option disabled>--Select a Elder--</option>
+            <option v-for="elderName in elders" :key="elderName.elder_name">
+                {{ elderName.elder_name }}
             </option>
           </select>
 
-          <!-- <p v-if="!editing">{{clientName}}</p> -->
-          <!-- <p>{{clientName}}</p> -->
+          <!-- <p v-if="!editing">{{elderName}}</p> -->
+          <!-- <p>{{elderName}}</p> -->
         </div>
 
 
@@ -76,9 +76,9 @@
 
         <div class="mb-3">
           <label for="notes" class="form-label">Notes: </label>
-          <textarea id="notes" name="notes" class="form-control" v-if="editing" v-model="clientNotes"></textarea>
-          <!-- <p v-if="!editing">{{clientNotes}}</p> -->
-          <!-- <p>{{clientNotes}}</p> -->
+          <textarea id="notes" name="notes" class="form-control" v-if="editing" v-model="elderNotes"></textarea>
+          <!-- <p v-if="!editing">{{elderNotes}}</p> -->
+          <!-- <p>{{elderNotes}}</p> -->
         </div>
 
         <button type="submit" class="btn btn-primary" id="appointSubmit">Submit</button>
@@ -93,15 +93,15 @@
           <button type="button" to="/calendar" class="btn btn-secondary">Save</button>
         </div> -->
 
-      <!-- <p>clientName: {{clientName}} driverName: {{driverName}} appDate: {{appDate}}<br>
+      <!-- <p>elderName: {{elderName}} driverName: {{driverName}} appDate: {{appDate}}<br>
        pickupAddress: {{pickupAddress}} dropoff: {{dropoffAddress}}<br>
-       clientNotes: {{clientNotes}}</p> -->
+       elderNotes: {{elderNotes}}</p> -->
     </div>
   </div>
 </template>
 
 <script>
-  import { getAppointmentById, getClients, getDrivers } from "./../../network/endpoints"
+  import { getAppointmentById, getElders, getDrivers } from "./../../network/endpoints"
   export default {
     components: {
     },
@@ -113,37 +113,37 @@
     data() {
       return {
         editing: this.editMode,
-        // clientName: "",
+        // elderName: "",
         title: "",
         // driverName: "",
         appDate: "",
         pickupAddress: "",
         dropoffAddress: "",
-        clientNotes: "",
+        elderNotes: "",
         drivers: [],
-        clients: [],
+        elders: [],
         selectedDriver:{
             driverName:""
         },
-        selectedClient:{
-          clientName: ""
+        selectedElder:{
+          elderName: ""
         }
       }
     },
     mounted() {
       this.getDrivers();
-      this.getClients();
+      this.getElders();
     },
     methods: {
       submitForm() {
         const appointment = {
           title: this.title,
-          clientName: this.clientName,
+          elderName: this.elderName,
           driverName: this.driverName,
           appDate: this.appDate,
           pickupAddress: this.pickupAddress,
           dropoffAddress: this.dropoffAddress,
-          clientNotes: this.clientNotes
+          elderNotes: this.elderNotes
         }
         getAppointmentById(appointment)
       },
@@ -152,8 +152,8 @@
         this.drivers = getDrivers()
       },
 
-      getClientsList(){
-        this.clients = getClients()
+      getEldersList(){
+        this.elders = getElders()
       }
     }
   }

@@ -24,3 +24,4 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 # Start nginx in the foreground when the container starts
 CMD ["nginx", "-g", "daemon off;"]
+
