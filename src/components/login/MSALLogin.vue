@@ -2,6 +2,7 @@
 /* eslint-disable */
 import msalConfig from '../../msal/msalConfig';
 import * as Msal from 'msal'; 
+import { useSecurityStore } from '@/stores/security';
 
 // TODO: Once Pinia is installed, we will build a proper store that can be accessed without the nested imports like we have it now
 // import store from '../../store/index';
@@ -9,6 +10,7 @@ import * as Msal from 'msal';
 export default {
     name: 'MSALLogin',
     data() {
+        const securityStore = useSecurityStore();
 
         // Load config
         let elder = new Msal.UserAgentApplication(msalConfig);
@@ -35,8 +37,8 @@ export default {
 
         // Store token somewhere..
         function storeToken(token) {
-            // store.setAccessToken = token;
-            console.log("Currently store is broken, cannot set token: " + token)
+            securityStore.setAccessToken(token);
+            // console.log("Currently store is broken, cannot set token: " + token)
         }
 
         // Figure out what ta heck to do with da token
@@ -45,10 +47,10 @@ export default {
             // Manually move the page for now....
             switch (userMSData.jobTitle) {
                 case null: // TODO change ot admin once token evaluation is established...
-                    window.location.href = 'http://localhost:8000/calendar'
+                    window.location.href = 'http://localhost:8080/calendar'
                     break;
                 case 'driver':
-                    window.location.href = 'http://localhost:8000/driver' 
+                    window.location.href = 'http://localhost:8080/driver' 
                     break;
                 default: 
                     // Invalid credentials page go here lol
