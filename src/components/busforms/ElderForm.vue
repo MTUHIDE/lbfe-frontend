@@ -181,7 +181,7 @@ import Test from "./elderTable/Test.vue";
 import ModalComponent from "./elderTable/ModalComponent.vue";
 import { ref } from "vue";
 import {
-  getClients,
+  getElders,
   createElder,
   editElder,
   deleteElder,
@@ -371,7 +371,7 @@ export default defineComponent({
         Backend assumes bad timezone, handles timezone conversion
     */
     async loadElders() {
-        let data = await getClients();
+        const data = await getElders();
         //CODE FROM LOAD DRIVER LIST FROM CALENDAR COMPONENT
         // const data = await getDrivers();
         // this.driversList = JSON.parse(JSON.stringify(data.data.drivers)); // De-proxy

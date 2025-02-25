@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      clientName: '',
+      elderName: '',
       status: '',
       statusOptions: ['Picked Up', 'Dropped Off', 'On My Way']
     }
@@ -27,9 +27,9 @@ export default {
       <label for="driverName">Driver Name</label>
       <input type="text" class="form-control" v-model="driverName" id="driverName">
       <!-- <b-form-input v-model="driverName" id="driverName" /> -->
-      <label for="clientName">Elder Name</label>
-      <input type="text" class="form-control" v-model="clientName" id="clientName">
-      <!-- <b-form-input v-model="clientName" id="clientName" /> -->
+      <label for="elderName">Elder Name</label>
+      <input type="text" class="form-control" v-model="elderName" id="elderName">
+      <!-- <b-form-input v-model="elderName" id="elderName" /> -->
       <label for="status">Status Update</label>
       <select class="form-select" v-model="status" :options="statusOptions" id="status">
         <option selected>Example option</option>
