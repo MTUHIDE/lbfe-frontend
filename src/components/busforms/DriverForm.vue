@@ -403,11 +403,14 @@ export default defineComponent({
     async saveDriver() {
       this.selectedDriver = this.cachedDriver;
 
-      const response = !this.selectedDriver.driverId
+
+      const response = this.selectedDriver.driverId === -1
         ? await this.createNewDriver() // If appointment has no id attached, assume we're creating a new one
         : await this.updateDriver(); // else, update it
 
       if (!response || response.status >= 400) {
+        this.hideModal();
+        //send a message that a driver could not be updated
         return;
       }
 
