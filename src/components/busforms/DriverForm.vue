@@ -7,166 +7,41 @@
 
   <modal-component @close="toggleModal" :modalActive="modalActive">
       <div class="modal-inner calendar-modal">
-        <div class="calendar-popup">
-          <!-- Modal Header -->
-          <h5 v-show="isAddingDriver" class="modal-title">
-            Add Driver
-          </h5>
-          <!-- Modal Header -->
-          <h5 v-show="isEditingDriver" class="modal-title">
-            Edit Driver
-          </h5>
 
-          <!-- Modal Body -->
-          <div class="popup-inner">
-
-            <!--creates a form-->
-            <form id="editForm" @submit.prevent="editForm">
-              <!--left aligned form body -->
-              <div class="edit-left">
-                <!--creates a label for the form for first names-->
-                <label for="editFirstName" class="form-label">First Name: </label>
-
-                <!--sets how the inputs look/what they say to put in and where to store them--> 
-                <input
-                  name="firstName"
-                  type="text"
-                  class="form-control"
-                  id="editFirstName"
-                  v-model="cachedDriver.firstName"
-                  required
-                />
-              </div>
-
-              <!--Right aligned form body-->
-              <div class="edit-right">
-                <!--creates a label for the form for last names-->
-                <label for="editLastName" class="form-label">Last Name: </label>
-
-                <!--sets how the inputs look/what they say to put in and where to store them-->
-                <input
-                  name="lastName"
-                  type="text"
-                  class="form-control"
-                  id="editLastName"
-                  v-model="cachedDriver.lastName"
-                  required
-                />
-              </div>
-
-              <!--Another left aligned form body-->
-              <div class="edit-left">
-                <!--creates a label for the form for Phone numbers-->
-                <label for="editPhone" class="form-label">Phone Number: </label>
-
-                <!--sets how the inputs look/what they say to put in and where to store them-->
-                <input
-                  name="phone"
-                  type="text"
-                  class="form-control"
-                  id="editPhone"
-                  v-model="cachedDriver.phoneNumber"
-                  required
-                />
-              </div>
-
-              <!--Another right aligned form body-->
-              <div class="edit-right">
-                <!--creates a label for the form for Insurance ID-->
-                <label for="editInsurance" class="form-label">Insurance ID: </label>
-
-                <!--sets how the inputs look/what they say to put in and where to store them-->
-                <input
-                  name="insurance"
-                  type="text"
-                  class="form-control"
-                  id="editInsurance"
-                  v-model="cachedDriver.insuranceId"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="editAddress" class="form-label"
-                  >Home Address:
-                </label>
-                <textarea
-                  id="editAddress"
-                  name="address"
-                  class="form-control"
-                  v-model="cachedDriver.address"
-                  required
-                ></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="editNotes" class="form-label"
-                  >Driver Notes:
-                </label>
-                <textarea
-                  id="editNotes"
-                  name="notes"
-                  class="form-control"
-                  v-model="cachedDriver.notes"
-                ></textarea>
-              </div>
-            </form>
-          </div>
-
-          <!-- Close / Save Appointment Modal -->
-          <div class="button-row">
-            <button
-              @click="hideModal"
-              class="btn btn-secondary custom-close-btn"
-            >
-              Close
-            </button>
-            <button
-              @click="saveDriver"
-              class="btn btn-primary custom-save-btn"
-            >
-              Save
-            </button>
-            <button
-              v-show="!isAddingDriver"
-              @click="deleteDriver"
-              class="btn btn-danger custom-del-btn"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-
+        <DriverForm1></DriverForm1>
+      
         <!-- End Modal Body -->
       </div>
     </modal-component>
 
-          <div class="headerToolbar">
-            <button
-              @click="showAddDriverModal"
-              class="btn btn-secondary custom-create-btn"
-            >
-              + Create
-            </button>
-          </div>
-<div class="table">
-  <table-lite
-    :is-slot-mode="true"
-    :is-loading="table.isLoading"
-    :columns="table.columns"
-    :rows="table.rows"
-    :total="table.totalRecordCount"
-    :sortable="table.sortable"
-    @do-search="doSearch"
-    @is-finished="table.isLoading = false"
-  >
-    <template v-slot:name="data">
-      <Test>
-        {{ data.value.name }}
-      </Test>
-    </template>
-  </table-lite>
-</div>
+  <div class="headerToolbar">
+    <button
+      @click="showAddDriverModal"
+      class="btn btn-secondary custom-create-btn"
+    >
+      + Create
+    </button>
+  </div>
+
+
+  <div class="table">
+    <table-lite
+      :is-slot-mode="true"
+      :is-loading="table.isLoading"
+      :columns="table.columns"
+      :rows="table.rows"
+      :total="table.totalRecordCount"
+      :sortable="table.sortable"
+      @do-search="doSearch"
+      @is-finished="table.isLoading = false"
+    >
+      <template v-slot:name="data">
+        <Test>
+          {{ data.value.name }}
+        </Test>
+      </template>
+    </table-lite>
+  </div>
 </template>
 
 <script>
@@ -174,6 +49,7 @@ import { defineComponent, reactive } from "vue";
 import TableLite from "./driverTable/TableLite.vue";
 import Test from "./driverTable/Test.vue";
 import ModalComponent from "./driverTable/ModalComponent.vue";
+import DriverForm1 from "./DriverCreateForm.vue";
 import { ref } from "vue";
 import {
   getDrivers,
@@ -181,6 +57,7 @@ import {
   editDriver,
   deleteDriver,
 } from "../../network/endpoints";
+
 // Fake Data for 'asc' sortable
 const sampleData1 = (offst, limit) => {
   offst = offst + 1;
@@ -208,7 +85,7 @@ const sampleData2 = (offst, limit) => {
 };
 export default defineComponent({
   name: "App",
-  components: { TableLite, Test, ModalComponent },
+  components: { TableLite, Test, ModalComponent, DriverForm1 },
   setup() {
 
     const modalActive = ref(false);
@@ -283,6 +160,19 @@ export default defineComponent({
       count: 0, // Total number of appointments loaded
       isLoading: false,
 
+      formData: {
+        firstName: '',
+        lastName: '',
+        insuranceId: ''
+      },
+      errors: {
+        firstName: '',
+        lastName: '',
+        insuranceId: ''
+      },
+      formError: '',
+      formSubmitted: false,
+
       // Modal v-show binds
       isAddingDriver: false, // Toggles create mode on modal
       isEditingDriver: false, // Toggles edit mode on modal
@@ -343,6 +233,60 @@ export default defineComponent({
   methods: {
     // Full Calendar Helper Functions
     // =====================================================================
+
+    //validate the form
+    validateForm(){
+      this.errors = {
+        firstName: '',
+        lastName: '',
+        insuranceId: ''
+      };
+
+      this.formError = '';
+
+      let isValid = true;
+
+      //validate first name
+      if (!this.cachedDriver.firstName.trim()){
+        this.errors.firstName = 'First name is requried';
+        isValid = false;
+      }
+
+      //validate last name
+      if (!this.cachedDriver.lastName.trim()){
+        this.errors.lastName = 'Last name is requried';
+        isValid = false;
+      }
+
+      //validate insuuranceID
+      if (!this.cachedDriver.insuranceId.trim()){
+        this.errors.insuranceId = 'insuranceId is requried';
+        isValid = false;
+      }
+
+      if (!isValid){
+        this.formError = 'Please correct the error in the form before submitting.';
+      }
+
+      return isValid;
+    },
+
+    submitForm(){
+      if (this.validateForm()){
+        alert('Form submitted successfully!');
+
+        this.formData ={
+        firstName: '',
+        lastName: '',
+        insuranceId: ''
+        };
+
+      } else {
+        console.log('Form validation failed')
+      }
+    },
+
+
 
     // Resets appointments to current appointmentEvents
     reloadDrivers() {
@@ -409,7 +353,6 @@ export default defineComponent({
         : await this.updateDriver(); // else, update it
 
       if (!response || response.status >= 400) {
-        this.hideModal();
         //send a message that a driver could not be updated
         return;
       }
