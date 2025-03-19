@@ -3,7 +3,7 @@ import axios from 'axios'
 // Define the base URL for our request
 const baseUrl = "http://localhost:9010/api" // TODO - Load from ENV
 
-// Define the requestType we want. 
+// Define the requestType we want.
 // All routes have the same, so this lets us bulk edit if needed
 const getOne = '/?id='          // append id
 const getList = '/list'
@@ -12,7 +12,7 @@ const postEdit = '/edit'        // attach a body
 const deleteDelete = '/delete'  // attach a body (only needs an id)
 
 
-// ********* APPOINTMENTS ********* 
+// ********* APPOINTMENTS *********
 const appointmentUrl = baseUrl + '/appointment' //this is changed again, do NOT add an 's' to this as it breaks post requests
 
 // Call the getAllAppointments route in our backend
@@ -54,7 +54,7 @@ export async function deleteAppointment(appointment) {
 
 
 
-// ********* DRIVERS ************** 
+// ********* DRIVERS **************
 const driverUrl = baseUrl + '/drivers'
 
 // Call the getAllDrivers route in our backend
@@ -93,7 +93,7 @@ export async function deleteDriver(driver) {
 
 
 
-// ********* ELDERS *************** 
+// ********* ELDERS ***************
 const elderUrl = baseUrl + '/elders' //changed from elders to elders
 
 // Call the getAlElders route in our backend
