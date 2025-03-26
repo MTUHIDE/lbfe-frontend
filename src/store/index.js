@@ -1,20 +1,15 @@
-// TODO: We will be using Pinia over Vuex. Vue has officially switched support to Pinia
+//TODO: We will be using Pinia over Vuex. Vue has officially switched support to Pinia
 
-// /* eslint-disable */ 
-// import Vuex from 'vuex';
+/* eslint-disable */ 
+import { defineStore } from 'pinia'
 
-// export function createStore() {
-//   return new Vuex.Store({
-//     state: {
-//       app: null
-//     },
-//     mutations: {
-//       app (state, app) {
-//         state.app = app
-//       }
-//     },
-//     modules: {
-      
-//     }
-//   })
-// }
+export const useAppStore = defineStore('app', {
+  state: () => ({
+    app: null,
+  }),
+  actions: {
+    setApp(app) {
+      this.app = app
+    },
+  },
+});
